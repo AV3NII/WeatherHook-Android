@@ -8,5 +8,8 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_screen)
+
+        val action=supportActionBar
+        action!!.title = "Settings"
     }
 }

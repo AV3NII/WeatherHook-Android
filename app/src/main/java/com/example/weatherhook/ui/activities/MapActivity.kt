@@ -9,5 +9,8 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.map_screen)
+
+        val action=supportActionBar
+        action!!.title = "Map"
     }
 }
