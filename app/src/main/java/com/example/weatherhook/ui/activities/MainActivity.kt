@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openMap(view: View) {
-        val intent = Intent(this, MapActivity::class.java)
+        val intent = Intent(this, MapsActivity::class.java)
         startActivity(intent)
     }
 
