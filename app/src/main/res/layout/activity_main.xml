@@ -8,6 +8,7 @@
     tools:context=".ui.activities.MainActivity">
 
 
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="com.example.weatherhook.ui.fragments.nav_bar_fragment"
