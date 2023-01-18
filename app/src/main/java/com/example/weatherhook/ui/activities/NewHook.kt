@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import com.example.weatherhook.data.repository.WeatherHookRepo
 import com.example.weatherhook.databinding.FragmentTest1Binding
 
 
@@ -24,7 +25,13 @@ class NewHook : Fragment(R.layout.fragment_test1) {
     private val binding: FragmentTest1Binding
         get() = _binding!!
 
+    val repo = WeatherHookRepo()
+    val data = repo.loadAllData()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+
+
+
         _binding = FragmentTest1Binding.inflate(inflater, container, false)
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -38,8 +45,8 @@ class NewHook : Fragment(R.layout.fragment_test1) {
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(10.dp)
                     ) {
-                        Text(text = "Hello")
-                        Text(text = "This is a test")
+                        Text(text = data.events[0].title)
+                        Text(text = data.events[0].active.toString())
                         Text(text = "Wow")
                     }
 
