@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.weatherhook.R
 
 
-class nav_bar_fragment : Fragment() {
+class nav_bar : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +21,7 @@ class nav_bar_fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_nav_bar_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_nav_bar, container, false)
     }
 
 
