@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 fun Weekdays(daysList: List<String>, size: Int) {
         val background = colorResource(id = R.color.white)
         val backgroundActivated = colorResource(id = R.color.dark_green)
-        val borderRadius = (size/5).toInt()
+        val borderRadius = (size/5)
         val textColor = colorResource(id = R.color.black_green)
         val textColorActivated = colorResource(id = R.color.white)
         var colorColor = Color.Black

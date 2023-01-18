@@ -11,8 +11,6 @@ import androidx.compose.material.Card
 import androidx.compose.material.Surface
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -24,11 +22,15 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import com.example.weatherhook.R
 import com.example.weatherhook.Weekdays
+import com.example.weatherhook.data.repository.WeatherHookRepo
 
 
 class Prototyping : Fragment() {
 
     private lateinit var composeView: ComposeView
+
+    val repo: WeatherHookRepo = WeatherHookRepo()
+    val data = repo.loadAllData().events[1]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +48,7 @@ class Prototyping : Fragment() {
         }
     }
 
-    val listOfDays = listOf("MO", "TU", "FR", "SA")
+    val listOfDays = data.relevantDays
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
@@ -75,15 +77,14 @@ class Prototyping : Fragment() {
                             }
                         }
                         Column(modifier = Modifier.padding(start = 10.dp)) {
-                            Text(text = "Swimming", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 10.dp, bottom = 5.dp, top = 10.dp))
-                            Text(text = "Time to event: 1 Day", modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
+                            Text(text = data.title, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 10.dp, bottom = 5.dp, top = 10.dp))
+                            Text(text = "Time to event: ${data.timeToEvent} Day(s)", modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
                             Weekdays(listOfDays, 20)
                         }
                         Column(modifier = Modifier.padding(end = 20.dp)) {
-                                val mCheckedState = remember{ mutableStateOf(false)}
                                 Switch(modifier = Modifier
                                     .fillMaxSize()
-                                    .scale(1.3f), checked = mCheckedState.value, onCheckedChange = {mCheckedState.value = it})
+                                    .scale(1.3f), checked = data.active, onCheckedChange = {data.active = it})
                         }
 
 

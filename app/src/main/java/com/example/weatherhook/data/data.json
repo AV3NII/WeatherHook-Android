@@ -1,0 +1,103 @@
+{
+  "events": [
+    {
+      "active": false,
+      "title": "Swimming",
+      "location": {
+        "x": 50.0,
+        "y": 75.0
+      },
+      "timeToEvent": 3,
+      "relevantDays": [
+        "SA",
+        "SU"
+      ],
+      "triggers": [
+        {
+          "weatherPhenomenon": 0,
+          "correspondingIntensity": false
+        }
+      ]
+    },
+    {
+      "active": true,
+      "title": "Climbing",
+      "location": {
+        "x": 50.0,
+        "y": 75.0
+      },
+      "timeToEvent": 3,
+      "relevantDays": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
+      ],
+      "triggers": [
+        {
+          "weatherPhenomenon": 1,
+          "correspondingIntensity": 0.5
+        },
+        {
+          "weatherPhenomenon": 5,
+          "correspondingIntensity": 18
+        }
+      ]
+    },
+    {
+      "active": true,
+      "title": "Surfing",
+      "location": {
+        "x": 50.0,
+        "y": 75.0
+      },
+      "timeToEvent": 5,
+      "relevantDays": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR",
+        "SA",
+        "SU"
+      ],
+      "triggers": [
+        {
+          "weatherPhenomenon": 4,
+          "correspondingIntensity": 3
+        },
+        {
+          "weatherPhenomenon": 5,
+          "correspondingIntensity": 20
+        }
+      ]
+    },
+    {
+      "active": false,
+      "title": "Jogging",
+      "location": {
+        "x": 50.0,
+        "y": 75.0
+      },
+      "timeToEvent": 1,
+      "relevantDays": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
+      ],
+      "triggers": [
+        {
+          "weatherPhenomenon": 1,
+          "correspondingIntensity": 0.7
+        },
+        {
+          "weatherPhenomenon": 2,
+          "correspondingIntensity": 0.33
+        }
+      ]
+    }
+  ]
+}
