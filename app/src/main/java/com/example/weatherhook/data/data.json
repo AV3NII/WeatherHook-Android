@@ -9,13 +9,8 @@
       },
       "timeToEvent": 3,
       "relevantDays": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
+        "SA",
+        "SU"
       ],
       "triggers": [
         {
@@ -33,11 +28,11 @@
       },
       "timeToEvent": 3,
       "relevantDays": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
       ],
       "triggers": [
         {
@@ -59,13 +54,13 @@
       },
       "timeToEvent": 5,
       "relevantDays": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR",
+        "SA",
+        "SU"
       ],
       "triggers": [
         {
@@ -87,11 +82,11 @@
       },
       "timeToEvent": 1,
       "relevantDays": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR"
       ],
       "triggers": [
         {
