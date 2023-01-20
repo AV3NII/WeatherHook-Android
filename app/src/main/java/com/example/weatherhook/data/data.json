@@ -1,6 +1,7 @@
 {
   "events": [
     {
+      "eventId":0,
       "active": false,
       "title": "Swimming",
       "location": {
@@ -8,18 +9,16 @@
         "y": 75.0
       },
       "timeToEvent": 3,
-      "relevantDays": [
-        "SA",
-        "SU"
-      ],
+      "relevantDays": "SA;SO",
       "triggers": [
         {
           "weatherPhenomenon": 0,
-          "correspondingIntensity": false
+          "correspondingIntensity": 0
         }
       ]
     },
     {
+      "eventId":1,
       "active": true,
       "title": "Climbing",
       "location": {
@@ -27,13 +26,7 @@
         "y": 75.0
       },
       "timeToEvent": 3,
-      "relevantDays": [
-        "MO",
-        "TU",
-        "WE",
-        "TH",
-        "FR"
-      ],
+      "relevantDays": "MO;TU;WE;TH;FR",
       "triggers": [
         {
           "weatherPhenomenon": 1,
@@ -46,6 +39,7 @@
       ]
     },
     {
+      "eventId":2,
       "active": true,
       "title": "Surfing",
       "location": {
@@ -53,15 +47,7 @@
         "y": 75.0
       },
       "timeToEvent": 5,
-      "relevantDays": [
-        "MO",
-        "TU",
-        "WE",
-        "TH",
-        "FR",
-        "SA",
-        "SU"
-      ],
+      "relevantDays": "MO;TU;WE;TH;FR;SA;SU",
       "triggers": [
         {
           "weatherPhenomenon": 4,
@@ -74,6 +60,7 @@
       ]
     },
     {
+      "eventId":3,
       "active": false,
       "title": "Jogging",
       "location": {
@@ -81,13 +68,7 @@
         "y": 75.0
       },
       "timeToEvent": 1,
-      "relevantDays": [
-        "MO",
-        "TU",
-        "WE",
-        "TH",
-        "FR"
-      ],
+      "relevantDays": "MO;TU;WE;TH;FR",
       "triggers": [
         {
           "weatherPhenomenon": 1,
@@ -95,7 +76,7 @@
         },
         {
           "weatherPhenomenon": 2,
-          "correspondingIntensity": 0.33
+          "correspondingIntensity": 1
         }
       ]
     }

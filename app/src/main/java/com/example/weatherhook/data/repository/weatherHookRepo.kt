@@ -2,21 +2,19 @@ package com.example.weatherhook.data.repository
 
 import android.util.Log
 import com.example.weatherhook.data.models.Weather
-import com.example.weatherhook.data.models.WeatherHook
-import com.example.weatherhook.data.models.WeatherHookList
+import com.example.weatherhook.data.models.WeatherHookEvent
+import com.example.weatherhook.data.models.WeatherHookEventList
 import com.google.gson.Gson
 
 class WeatherHookRepo {
-    fun loadAllData(): WeatherHookList{
+    fun loadAllData(): WeatherHookEventList {
         return try {
             val gson = Gson()
             val jsonString = jsonData
-            gson.fromJson(jsonString, WeatherHookList::class.java)
+            gson.fromJson(jsonString, WeatherHookEventList::class.java)
         } catch (e: Exception) {
             Log.e("DataRepository", "Error loading json data", e)
-            return WeatherHookList( listOf(WeatherHook(active = false, title = "Error", location = Pair(0.2f,0.3f), timeToEvent = 2, relevantDays = listOf("MO"), triggers = listOf(
-                Weather(weatherPhenomenon = 2, correspondingIntensity = 2)) )
-            )
+            return WeatherHookEventList( listOf(WeatherHookEvent(eventId = 0, active = false, title = "Error", location = Pair(0.2f,0.3f), timeToEvent = 2, relevantDays = "MO", triggers = listOf(Weather(weatherPhenomenon = 2, correspondingIntensity = 2f)).toMutableList())).toMutableList()
             )
         }
     }
@@ -24,6 +22,7 @@ class WeatherHookRepo {
     private val jsonData = """{
   "events": [
     {
+      "eventId":0,
       "active": false,
       "title": "Swimming",
       "location": {
@@ -31,18 +30,16 @@ class WeatherHookRepo {
         "y": 75.0
       },
       "timeToEvent": 3,
-      "relevantDays": [
-        "SA",
-        "SU"
-      ],
+      "relevantDays": "SA;SO",
       "triggers": [
         {
           "weatherPhenomenon": 0,
-          "correspondingIntensity": false
+          "correspondingIntensity": 0f
         }
       ]
     },
     {
+      "eventId":1,
       "active": true,
       "title": "Climbing",
       "location": {
@@ -50,25 +47,20 @@ class WeatherHookRepo {
         "y": 75.0
       },
       "timeToEvent": 3,
-      "relevantDays": [
-        "MO",
-        "TU",
-        "WE",
-        "TH",
-        "FR"
-      ],
+      "relevantDays": "MO;TU;WE;TH;FR",
       "triggers": [
         {
           "weatherPhenomenon": 1,
-          "correspondingIntensity": 0.5
+          "correspondingIntensity": 0.5f
         },
         {
           "weatherPhenomenon": 5,
-          "correspondingIntensity": 18
+          "correspondingIntensity": 18f
         }
       ]
     },
     {
+      "eventId":2,
       "active": true,
       "title": "Surfing",
       "location": {
@@ -76,27 +68,20 @@ class WeatherHookRepo {
         "y": 75.0
       },
       "timeToEvent": 5,
-      "relevantDays": [
-        "MO",
-        "TU",
-        "WE",
-        "TH",
-        "FR",
-        "SA",
-        "SU"
-      ],
+      "relevantDays": "MO;TU;WE;TH;FR;SA;SU",
       "triggers": [
         {
           "weatherPhenomenon": 4,
-          "correspondingIntensity": 3
+          "correspondingIntensity": 3f
         },
         {
           "weatherPhenomenon": 5,
-          "correspondingIntensity": 20
+          "correspondingIntensity": 20f
         }
       ]
     },
     {
+      "eventId":3,
       "active": false,
       "title": "Jogging",
       "location": {
@@ -104,21 +89,15 @@ class WeatherHookRepo {
         "y": 75.0
       },
       "timeToEvent": 1,
-      "relevantDays": [
-        "MO",
-        "TU",
-        "WE",
-        "TH",
-        "FR"
-      ],
+      "relevantDays": "MO;TU;WE;TH;FR",
       "triggers": [
         {
           "weatherPhenomenon": 1,
-          "correspondingIntensity": 0.7
+          "correspondingIntensity": 0.7f
         },
         {
           "weatherPhenomenon": 2,
-          "correspondingIntensity": 0.33
+          "correspondingIntensity": 1f
         }
       ]
     }
