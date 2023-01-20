@@ -1,14 +1,14 @@
 package com.example.weatherhook.data.models
 
-data class WeatherHook(
-    // val id: Int,     We might include that
+data class WeatherHookEvent(
+    val eventId: Int,
     var active: Boolean,
     var title: String,
-    //uses float because we don´t need to be nm nor cm precise (Float ~1.7m)
+
     var location: Pair<Float, Float>,
 
     var timeToEvent: Int,
-    var relevantDays: List<String>,
+    var relevantDays: String,
 
     var triggers:List<Weather>,
 
@@ -16,7 +16,7 @@ data class WeatherHook(
 
 data class Weather (
     val weatherPhenomenon:Int,
-    val correspondingIntensity: Any
+    val correspondingIntensity: Float
 )
 
-data class WeatherHookList(val events: List<WeatherHook>)
+data class WeatherHookEventList(val events: List<WeatherHookEvent>)
