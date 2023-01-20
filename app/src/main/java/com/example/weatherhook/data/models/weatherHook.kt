@@ -10,13 +10,13 @@ data class WeatherHookEvent(
     var timeToEvent: Int,
     var relevantDays: String,
 
-    var triggers:List<Weather>,
+    var triggers:MutableList<Weather>,
 
     )
 
 data class Weather (
-    val weatherPhenomenon:Int,
-    val correspondingIntensity: Float
+    var weatherPhenomenon:Int,
+    var correspondingIntensity: Float
 )
 
-data class WeatherHookEventList(val events: List<WeatherHookEvent>)
+data class WeatherHookEventList(val events: MutableList<WeatherHookEvent>)
