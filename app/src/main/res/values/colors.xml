@@ -6,6 +6,7 @@
     <color name="dark_green">#354F52</color>
     <color name="mid_green">#52796F</color>
     <color name="light_green">#84A98C</color>
-    <color name="white">#CAD2C5</color>
+    <color name="light_green_bg">#D9E2D5</color>
+    <color name="white">#E5E9E3</color>
     <color name="signal_red">#BC4749</color>
 </resources>

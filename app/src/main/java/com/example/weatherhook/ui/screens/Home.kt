@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.repository.WeatherHookRepo
+import com.example.weatherhook.ui.components.WeatherEventList
 
 
-class Prototyping : Fragment() {
+class Home : Fragment() {
 
     private lateinit var composeView: ComposeView
 
@@ -36,7 +38,9 @@ class Prototyping : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
-
+            Column() {
+                WeatherEventList(data, context = requireContext())
+            }
 
             
         }
