@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/imageView6"
@@ -17,8 +18,7 @@
             android:src="@drawable/background_navbar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/map_image"
@@ -26,10 +26,10 @@
             android:layout_height="50dp"
             android:layout_marginEnd="60dp"
             android:layout_marginBottom="15dp"
+            android:onClick="openMap"
             android:src="@drawable/ic_baseline_map_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/anchor_image"
-            android:onClick="openMap"/>
+            app:layout_constraintEnd_toStartOf="@+id/anchor_image" />
 
         <ImageView
             android:id="@+id/settings_image"
@@ -37,10 +37,10 @@
             android:layout_height="50dp"
             android:layout_marginStart="60dp"
             android:layout_marginBottom="15dp"
+            android:onClick="openSettings"
             android:src="@drawable/ic_baseline_settings_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/anchor_image"
-            android:onClick="openSettings"/>
+            app:layout_constraintStart_toEndOf="@+id/anchor_image" />
 
         <ImageView
             android:id="@+id/anchor_image"
