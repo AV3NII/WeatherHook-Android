@@ -12,6 +12,7 @@
         android:name="com.example.weatherhook.ui.screens.Prototyping"
         android:layout_width="411dp"
         android:layout_height="645dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/fragmentContainerView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
