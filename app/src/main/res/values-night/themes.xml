@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.WeatherHook" parent="Theme.MaterialComponents.DayNight.Bridge">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/mid_green</item>
+        <item name="colorPrimary">@color/dark_green</item>
         <item name="colorPrimaryVariant">@color/dark_green</item>
         <item name="colorOnPrimary">@color/screen_background</item>
         <item name="colorSecondary">@color/signal_red</item>

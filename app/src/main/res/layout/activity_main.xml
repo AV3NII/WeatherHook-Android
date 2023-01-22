@@ -10,17 +10,12 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:name="com.example.weatherhook.ui.screens.Prototyping"
-        android:layout_width="411dp"
-        android:layout_height="645dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/fragmentContainerView"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout="@layout/fragment_home" />
-
+        tools:layout="@layout/fragment_prototyping" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
