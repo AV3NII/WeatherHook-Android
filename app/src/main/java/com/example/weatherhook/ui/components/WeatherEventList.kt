@@ -1,11 +1,9 @@
 package com.example.weatherhook.ui.components
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import android.util.Log
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -41,8 +39,10 @@ fun WeatherHook(event: WeatherHookEvent) {
 
     return Card(modifier = Modifier
         .padding(10.dp)
-        .height(120.dp), elevation = 5.dp, shape = RoundedCornerShape(25.dp),
-
+        .height(120.dp)
+        .clickable { Log.d("editEvent",event.toString()) },
+        elevation = 5.dp,
+        shape = RoundedCornerShape(25.dp),
         border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green))
     ) {
         Row(modifier = Modifier.background(colorResource(id = R.color.light_green_bg))) {
