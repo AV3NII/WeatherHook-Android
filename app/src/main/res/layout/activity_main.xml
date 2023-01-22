@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
-        android:name="com.example.weatherhook.ui.screens.Prototyping"
+        android:name="com.example.weatherhook.ui.screens.Home"
         android:layout_width="411dp"
         android:layout_height="645dp"
         android:background="@color/white"
