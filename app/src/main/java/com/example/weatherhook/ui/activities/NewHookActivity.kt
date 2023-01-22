@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherhook.R
 
-class SettingsActivity : AppCompatActivity() {
+class NewHookActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.activity_new_hook)
 
         val action=supportActionBar
-        action!!.title = "Settings"
+        action!!.title = "New Hook"
     }
 }

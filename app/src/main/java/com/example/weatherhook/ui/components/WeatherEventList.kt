@@ -1,5 +1,7 @@
 package com.example.weatherhook.ui.components
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -21,10 +23,11 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
 import com.example.weatherhook.data.models.WeatherHookEvent
 import com.example.weatherhook.data.models.WeatherHookEventList
+import com.example.weatherhook.ui.activities.NewHookActivity
 
 
 @Composable
-fun WeatherHook(event: WeatherHookEvent) {
+fun WeatherHook(event: WeatherHookEvent,context: Context) {
     var active = remember { mutableStateOf(event.active) }
 
     var icon:Painter = painterResource(id = R.drawable.ic_baseline_anchor_24)
@@ -40,7 +43,10 @@ fun WeatherHook(event: WeatherHookEvent) {
     return Card(modifier = Modifier
         .padding(10.dp)
         .height(120.dp)
-        .clickable { Log.d("editEvent",event.toString()) },
+        .clickable {
+            Log.d("editEvent",event.toString())
+            context.startActivity(Intent(context, NewHookActivity::class.java))
+        },
         elevation = 5.dp,
         shape = RoundedCornerShape(25.dp),
         border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green))
@@ -80,7 +86,7 @@ fun WeatherHook(event: WeatherHookEvent) {
 }
 
 @Composable
-fun WeatherEventList(weatherHookEventList: WeatherHookEventList) {
+fun WeatherEventList(weatherHookEventList: WeatherHookEventList,context: Context) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(end = Dp(20f), top = Dp(5f))
@@ -90,7 +96,7 @@ fun WeatherEventList(weatherHookEventList: WeatherHookEventList) {
         
             weatherHookEventList.events.forEach{
 
-                WeatherHook(event = it)
+                WeatherHook(event = it, context)
 
             }
         

@@ -39,7 +39,7 @@ class Prototyping : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
             Column() {
-                WeatherEventList(data)
+                WeatherEventList(data, context = requireContext())
             }
 
             

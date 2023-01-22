@@ -27,6 +27,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun newHook(view: View) {
+        val intent = Intent(this, NewHookActivity::class.java)
+        startActivity(intent)
+
+    }
+
     fun openSettings(view: View) {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
