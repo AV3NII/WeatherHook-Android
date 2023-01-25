@@ -9,12 +9,15 @@ import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.repository.WeatherHookRepo
 
 
+
 class Prototyping : Fragment() {
+
 
     private lateinit var composeView: ComposeView
 
     val repo: WeatherHookRepo = WeatherHookRepo()
-    val data = repo.loadAllData()
+    val data = repo.loadAllData().events[1]
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,14 +35,19 @@ class Prototyping : Fragment() {
         }
     }
 
-    private val listOfDays = data.events[1].relevantDays.split(";")
+
+
+    var reloadView = 1
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
 
 
-            
         }
+
+
     }
 
 }
