@@ -1,6 +1,5 @@
 package com.example.weatherhook.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -27,20 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
 import com.example.weatherhook.data.models.Weather
-import com.example.weatherhook.data.repository.WeatherHookRepo
-
-val repo: WeatherHookRepo = WeatherHookRepo()
-val data = repo.loadAllData().events[1]
-var triggerList = data.triggers
+import com.example.weatherhook.data.models.WeatherHookEvent
 
 
 
-// Shows the Event Icons
+
 @Composable
 fun Events(weather: Int): Int {
 
     var weatherSelected by remember { mutableStateOf(weather) }
-
 
     var backgroundColor = colorResource(id = R.color.light_green)
     var backgroundColorSelected = colorResource(id = R.color.black_green)
@@ -56,7 +50,7 @@ fun Events(weather: Int): Int {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.padding(40.dp)) {
             for ((index, items) in icon.withIndex()) {
                 IconButton(onClick = {weatherSelected = index}, modifier = Modifier.size(24.dp)) {
-                    Icon(painter = icon[index], contentDescription = "Icon ${index}", Modifier.scale(1.6f), tint = if (weather == index) {backgroundColorSelected} else backgroundColor)
+                    Icon(painter = icon[index], contentDescription = "Icon ${index}", Modifier.scale(1.6f), tint = if (weatherSelected == index) {backgroundColorSelected} else backgroundColor)
                 }
             }
         }
@@ -64,9 +58,130 @@ fun Events(weather: Int): Int {
     return weatherSelected
 }
 
+
+@Composable
+fun Elements(weatherPhenomen: Int,_triggerList2: MutableList<Weather>, index: Int): MutableList<Weather> {
+    var selectedWeather by remember { mutableStateOf(weatherPhenomen) }
+    var _triggerListImage by remember { mutableStateOf(_triggerList2) }
+    selectedWeather = Events(_triggerList2[index].weatherPhenomenon)
+    Column {
+        when (selectedWeather) {
+            0 -> {_triggerListImage[index].correspondingIntensity = 1f
+                selectedWeather = 0}
+            1 -> {_triggerListImage[index].correspondingIntensity = Cloudy(_triggerList2[index].correspondingIntensity)
+                selectedWeather = 1}
+            2 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(2,steps = 4f, _triggerList2[index].correspondingIntensity)
+                selectedWeather = 2}
+            3 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(3,steps = 4f, _triggerList2[index].correspondingIntensity)
+                selectedWeather = 3}
+            4 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(4,steps = 6f, _triggerList2[index].correspondingIntensity)
+                selectedWeather = 4}
+            5 -> {var temp = Temperature2(_triggerList2[index].correspondingIntensity).toFloatOrNull()
+                if (temp == null) {temp = 0f}
+                _triggerListImage[index].correspondingIntensity = temp
+                selectedWeather = 5}
+            else -> {}
+        }
+    }
+    _triggerListImage[index].weatherPhenomenon = selectedWeather
+    return _triggerListImage
+}
+
+
+fun deleteLastElement(_triggerList2: MutableList<Weather>): MutableList<Weather> {
+    _triggerList2.removeLast()
+    return _triggerList2
+}
+
+
+fun addTrigger(_triggerList2: MutableList<Weather>): MutableList<Weather> {
+    _triggerList2.add(Weather(0, 0f))
+    return _triggerList2
+}
+
+@Composable
+fun AddDelete(_triggerList2: MutableList<Weather>): MutableList<Weather> {
+    var _triggerListImage by remember { mutableStateOf(_triggerList2) }
+
+
+    Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
+        .padding(10.dp)
+        .fillMaxWidth()) {
+        Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.padding(20.dp)) {
+            if (_triggerListImage.size <= 2) {
+                IconButton(
+                    modifier = Modifier.size(24.dp),
+                    onClick = {
+                    _triggerListImage = addTrigger(_triggerListImage)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_add_circle_24), contentDescription = "Add Event", modifier = Modifier.scale(1.6f)
+                    )
+                }
+            }
+            if (_triggerList2.size >= 2) {
+                IconButton(
+                    modifier = Modifier.size(24.dp),
+                    onClick = { _triggerListImage = deleteLastElement(_triggerListImage)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_delete_forever_24), contentDescription = "Add Event", modifier = Modifier.scale(1.6f)
+                    )
+                }
+            }
+
+        }
+    }
+    return _triggerListImage
+}
+
+
+@Composable
+fun Components(_triggerList2: MutableList<Weather>): MutableList<Weather> {
+    var _triggerListImage by remember { mutableStateOf(_triggerList2) }
+    var testBoolean = remember {
+        mutableStateOf(true)
+    }
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        for((index, triggers) in _triggerListImage.withIndex()) {
+            _triggerListImage = Elements(triggers.weatherPhenomenon,_triggerListImage, index)
+        }
+
+        var testList = AddDelete(_triggerListImage)
+
+        // Try
+        if(testList.size != _triggerListImage.size) {
+            testBoolean.value = false
+        }
+        _triggerListImage = testList
+
+
+
+    }
+
+
+    return _triggerListImage
+}
+
+
+@Composable
+fun newHook(weatherHookEvent: WeatherHookEvent): MutableList<Weather> {
+    var triggerList2 = weatherHookEvent.triggers
+    var _triggerListImage by remember { mutableStateOf(triggerList2) }
+
+    _triggerListImage = Components(_triggerListImage)
+
+    return _triggerListImage
+}
+
+
+
+
 // Slider without steps -> Cloudy
 @Composable
-fun Cloudy(percentage: Float) {
+fun Cloudy(percentage: Float): Float {
     var sliderPosition by remember { mutableStateOf(percentage) }
     Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
         .padding(10.dp)
@@ -78,11 +193,12 @@ fun Cloudy(percentage: Float) {
             Slider(value = sliderPosition, valueRange = 0f..1f,  onValueChange = { sliderPosition = it }, modifier = Modifier.width(270.dp))
         }
     }
+    return sliderPosition
 }
 
 // Slider with steps for multi-use
 @Composable
-fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float) {
+fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
 
     // 100% -> SliderSteps(n, n-1)
 
@@ -100,12 +216,15 @@ fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float) {
             Slider(value = sliderPosition, onValueChange = { sliderPosition = it }, steps = (steps.toInt()-2), modifier = Modifier.width(270.dp))
         }
     }
+    return sliderPosition
 }
+
 
 // Temp chooser
 @Composable
-fun Temperature(temperature: Float) {
-    var text by remember { mutableStateOf(TextFieldValue(temperature.toInt().toString())) }
+fun Temperature2(temperature: Float): String {
+    var textTemp by remember { mutableStateOf(TextFieldValue(temperature.toInt().toString())) }
+    var currentText by remember { mutableStateOf(temperature.toInt().toString()) }
     Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp)) {
@@ -117,10 +236,13 @@ fun Temperature(temperature: Float) {
             Text(text = "+", fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Surface(elevation = 3.dp) {
                 BasicTextField(
-                    value = text,
+                    value = textTemp,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                     onValueChange = {
-                        if (it.text.length <= 2) text = it
+                        if (it.text.length <= 2) {
+                            textTemp = it
+                            currentText = it.text
+                        }
                     },
                     modifier = Modifier
                         .width(60.dp)
@@ -132,10 +254,6 @@ fun Temperature(temperature: Float) {
 
                     decorationBox = { innerTextField ->
                         Row() {
-
-                            if (text.text.isEmpty()) {
-                                Text("14", color = Color.LightGray, fontSize = 27.sp, textAlign = TextAlign.Center)
-                            }
                             innerTextField()
                         }
                     }
@@ -147,86 +265,8 @@ fun Temperature(temperature: Float) {
             Text(text = "-", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
     }
+    if (currentText != null) {
+        return currentText
+    }
+    else return "3"
 }
-
-
-@Composable
-fun EventChooser(): MutableList<Weather> {
-    var _triggerList by remember { mutableStateOf(triggerList) }
-
-
-    // First Event Choosing
-    @Composable
-    fun EventChooserElements(weather: Int, intensity: Float) {
-        var weatherSelected by remember { mutableStateOf(weather) }
-        Column {
-            weatherSelected = Events(weatherSelected)
-            when (weatherSelected) {
-                1 -> {Cloudy(percentage = intensity)
-                    weatherSelected = 1}
-                2 -> {SliderSteps(2,steps = 4f, stepsSelected = intensity)
-                    weatherSelected = 2}
-                3 -> {SliderSteps(3,steps = 4f, stepsSelected = intensity)
-                    weatherSelected = 3}
-                4 -> {SliderSteps(4,steps = 6f, stepsSelected = intensity)
-                    weatherSelected = 4}
-                5 -> {Temperature(temperature = intensity)
-                    weatherSelected = 5}
-                else -> {}
-            }
-        }
-    }
-
-
-
-    fun deleteLastElement() {
-        _triggerList.removeLast()
-    }
-
-    fun addTrigger() {
-        _triggerList.add(Weather(0, 0f))
-    }
-
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        for((index, hook) in _triggerList.withIndex()){
-            EventChooserElements(hook.weatherPhenomenon, hook.correspondingIntensity)
-        }
-        Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
-            .padding(10.dp)
-            .fillMaxWidth()) {
-            Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.padding(20.dp)) {
-                if (_triggerList.size <= 2) {
-                    IconButton(
-                        modifier = Modifier.size(24.dp),
-                        onClick = { addTrigger()
-                            Log.d("myTag", _triggerList.toString())
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_add_circle_24), contentDescription = "Add Event", modifier = Modifier.scale(1.6f)
-                        )
-                    }
-                }
-                if (_triggerList.size >= 2) {
-                    IconButton(
-                        modifier = Modifier.size(24.dp),
-                        onClick = { deleteLastElement()
-                            Log.d("myTag", _triggerList.toString())
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_delete_forever_24), contentDescription = "Add Event", modifier = Modifier.scale(1.6f)
-                        )
-                    }
-                }
-
-            }
-        }
-        Spacer(modifier = Modifier.padding(70.dp))
-        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.SpaceEvenly) {
-
-        }
-    }
-    return _triggerList
-}
-

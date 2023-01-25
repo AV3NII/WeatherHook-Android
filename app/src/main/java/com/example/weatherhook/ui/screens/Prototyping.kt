@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.repository.WeatherHookRepo
-import com.example.weatherhook.ui.components.EventChooser
+import com.example.weatherhook.ui.components.newHook
 
 
 class Prototyping : Fragment() {
@@ -26,6 +26,7 @@ class Prototyping : Fragment() {
 
     val repo: WeatherHookRepo = WeatherHookRepo()
     val data = repo.loadAllData().events[1]
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,19 +46,20 @@ class Prototyping : Fragment() {
 
 
 
-
-    data class MyViewModel(var currentScreen: Int = 1)
     var reloadView = 1
-    val listOfDays = data.relevantDays.split(";")
+    //val listOfDays = data.relevantDays.split(";")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
 
 
             var _reloadView by remember { mutableStateOf(reloadView) }
-            var triggerList = EventChooser().toMutableList()
-            Log.d("newTriggerList", triggerList.toString())
-            _reloadView +=1
+            var _triggerList by remember { mutableStateOf(data.triggers) }
+            //var triggerList = EventChooser().toMutableList()
+            _triggerList = newHook(data)
+            Log.d("shit", _triggerList.toString())
+            //Log.d("newTriggerList", triggerList.toString())
+            //_reloadView +=1
 
 
 
