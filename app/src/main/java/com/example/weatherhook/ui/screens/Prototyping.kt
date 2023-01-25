@@ -45,19 +45,6 @@ class Prototyping : Fragment() {
         composeView.setContent {
 
 
-            var _reloadView by remember { mutableStateOf(reloadView) }
-            var _triggerList by remember { mutableStateOf(data.triggers) }
-
-
-            //_triggerList = newHook(data)
-
-            _triggerList = TriggerList(_triggerList)
-
-            Log.d("shit", _triggerList.toString())
-            //_reloadView +=1
-
-
-
         }
 
 
