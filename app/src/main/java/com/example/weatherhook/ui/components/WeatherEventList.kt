@@ -92,8 +92,7 @@ fun WeatherEventList(weatherHookEventList: WeatherHookEventList,context: Context
         .padding( top = Dp(5f))
         .padding(start = 10.dp, end = 10.dp)
         .verticalScroll(rememberScrollState())) {
-            weekDaysWidget(daysList = weatherHookEventList.events[0].relevantDays.split(";"))
-        
+
             weatherHookEventList.events.forEach{
 
                 WeatherHook(event = it, context)
