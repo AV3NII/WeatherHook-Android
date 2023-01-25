@@ -44,7 +44,7 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
         .padding(10.dp)
         .height(120.dp)
         .clickable {
-            Log.d("editEvent", event.toString())
+            Log.d("editEvent",event.toString())
             context.startActivity(Intent(context, NewHookActivity::class.java))
         },
         elevation = 5.dp,
@@ -89,7 +89,7 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
 fun WeatherEventList(weatherHookEventList: WeatherHookEventList,context: Context) {
     Column(modifier = Modifier
         .fillMaxWidth()
-        .padding( top = Dp(5f))
+        .padding(end = Dp(20f), top = Dp(5f))
         .padding(start = 10.dp, end = 10.dp)
         .verticalScroll(rememberScrollState())) {
             weekDaysWidget(daysList = weatherHookEventList.events[0].relevantDays.split(";"))
@@ -100,7 +100,7 @@ fun WeatherEventList(weatherHookEventList: WeatherHookEventList,context: Context
 
             }
         
-        Spacer(modifier = Modifier.padding(45.dp))
+        Box(modifier = Modifier.size(Dp(20f), Dp(55f)))
     }
 
 }
