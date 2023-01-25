@@ -51,7 +51,7 @@ fun WeatherForecast(listOfTemp: List<Weather>) {
 
             for ((index, items) in days.withIndex()) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Surface(shape = RoundedCornerShape(5.dp), modifier = Modifier.border(2.5.dp, if(currentDayFormatted == index+1)colorResource(
+                    Surface(shape = RoundedCornerShape(5.dp), modifier = Modifier.border(3.dp, if(currentDayFormatted == index+1)colorResource(
                         id = R.color.mid_green
                     ) else colorResource(id = R.color.dark_green), RoundedCornerShape(5.dp)))
                      {
