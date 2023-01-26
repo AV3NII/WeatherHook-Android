@@ -3,7 +3,9 @@ package com.example.weatherhook.ui.components
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -90,10 +92,8 @@ fun WeatherEventList(weatherHookEventList: WeatherHookEventList,context: Context
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding( top = Dp(5f))
-        .padding(start = 10.dp, end = 10.dp)
-        .verticalScroll(rememberScrollState())) {
-            weekDaysWidget(daysList = weatherHookEventList.events[0].relevantDays.split(";"))
-        
+        .padding(start = 10.dp, end = 10.dp)) {
+
             weatherHookEventList.events.forEach{
 
                 WeatherHook(event = it, context)
