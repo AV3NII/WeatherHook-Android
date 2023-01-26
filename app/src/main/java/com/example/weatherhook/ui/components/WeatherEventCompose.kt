@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -43,14 +42,14 @@ fun Events(weather: Int): Int {
         painterResource(R.drawable.baseline_grain_24),
         painterResource(R.drawable.baseline_snowboarding_24),
         painterResource(R.drawable.baseline_wind_power_24),
-        painterResource(R.drawable.baseline_whatshot_24),)
+        painterResource(R.drawable.baseline_whatshot_24))
     Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
         .padding(10.dp)
         .fillMaxWidth()) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.padding(40.dp)) {
             for ((index, items) in icon.withIndex()) {
                 IconButton(onClick = {weatherSelected = index}, modifier = Modifier.size(24.dp)) {
-                    Icon(painter = icon[index], contentDescription = "Icon ${index}", Modifier.scale(1.6f), tint = if (weatherSelected == index) {backgroundColorSelected} else backgroundColor)
+                    Icon(painter = icon[index], contentDescription = "Icon $index", Modifier.scale(1.6f), tint = if (weatherSelected == index) {backgroundColorSelected} else backgroundColor)
                 }
             }
         }
@@ -60,26 +59,26 @@ fun Events(weather: Int): Int {
 
 
 @Composable
-fun Elements(weatherPhenomen: Int,_triggerList2: MutableList<Weather>, index: Int): MutableList<Weather> {
+fun Elements(weatherPhenomen: Int,_triggerList: MutableList<Weather>, index: Int): MutableList<Weather> {
     var selectedWeather by remember { mutableStateOf(weatherPhenomen) }
-    var _triggerListImage by remember { mutableStateOf(_triggerList2) }
-    selectedWeather = Events(_triggerList2[index].weatherPhenomenon)
+    var _triggerListImage by remember { mutableStateOf(_triggerList) }
+    selectedWeather = Events(_triggerList[index].weatherPhenomenon)
     Column {
         when (selectedWeather) {
             0 -> {_triggerListImage[index].correspondingIntensity = 1f
-                selectedWeather = 0}
-            1 -> {_triggerListImage[index].correspondingIntensity = Cloudy(_triggerList2[index].correspondingIntensity)
-                selectedWeather = 1}
-            2 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(2,steps = 4f, _triggerList2[index].correspondingIntensity)
-                selectedWeather = 2}
-            3 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(3,steps = 4f, _triggerList2[index].correspondingIntensity)
-                selectedWeather = 3}
-            4 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(4,steps = 6f, _triggerList2[index].correspondingIntensity)
-                selectedWeather = 4}
-            5 -> {var temp = Temperature2(_triggerList2[index].correspondingIntensity).toFloatOrNull()
+                }
+            1 -> {_triggerListImage[index].correspondingIntensity = Cloudy(_triggerList[index].correspondingIntensity)
+                }
+            2 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(2,steps = 4f, _triggerList[index].correspondingIntensity)
+                }
+            3 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(3,steps = 4f, _triggerList[index].correspondingIntensity)
+                }
+            4 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(4,steps = 6f, _triggerList[index].correspondingIntensity)
+                }
+            5 -> {var temp = Temperature(_triggerList[index].correspondingIntensity).toFloatOrNull()
                 if (temp == null) {temp = 0f}
                 _triggerListImage[index].correspondingIntensity = temp
-                selectedWeather = 5}
+                }
             else -> {}
         }
     }
@@ -88,21 +87,21 @@ fun Elements(weatherPhenomen: Int,_triggerList2: MutableList<Weather>, index: In
 }
 
 
-fun deleteLastElement(_triggerList2: MutableList<Weather>): MutableList<Weather> {
-    _triggerList2.removeLast()
-    return _triggerList2
+fun deleteLastElement(_triggerList: MutableList<Weather>): MutableList<Weather> {
+    _triggerList.removeLast()
+    return _triggerList
 }
 
 
-fun addTrigger(_triggerList2: MutableList<Weather>): MutableList<Weather> {
-    _triggerList2.add(Weather(0, 0f))
-    return _triggerList2
+fun addTrigger(_triggerList: MutableList<Weather>): MutableList<Weather> {
+    _triggerList.add(Weather(0, 0f))
+    return _triggerList
 }
 
 @Composable
-fun AddDelete(_triggerList2: MutableList<Weather>): MutableList<Weather> {
-    var _triggerListImage by remember { mutableStateOf(_triggerList2) }
-
+fun AddDelete(_triggerList: MutableList<Weather>): MutableList<Weather> {
+    var _triggerListImage by remember { mutableStateOf(_triggerList) }
+    var refreshBoolean by remember { mutableStateOf(false) }
 
     Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
         .padding(10.dp)
@@ -111,65 +110,58 @@ fun AddDelete(_triggerList2: MutableList<Weather>): MutableList<Weather> {
             if (_triggerListImage.size <= 2) {
                 IconButton(
                     modifier = Modifier.size(24.dp),
-                    onClick = {
-                    _triggerListImage = addTrigger(_triggerListImage)
-                    }
+                    onClick = { _triggerListImage = addTrigger(_triggerListImage)
+                    refreshBoolean = !refreshBoolean}
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.baseline_add_circle_24), contentDescription = "Add Event", modifier = Modifier.scale(1.6f)
+                        painter = painterResource(R.drawable.baseline_add_circle_24), contentDescription = "Add Event", modifier = Modifier.scale(1.6f),
+                        tint = colorResource(R.color.black_green)
                     )
                 }
             }
-            if (_triggerList2.size >= 2) {
+            if (_triggerList.size >= 2) {
                 IconButton(
                     modifier = Modifier.size(24.dp),
                     onClick = { _triggerListImage = deleteLastElement(_triggerListImage)
+                        refreshBoolean = !refreshBoolean
                     }
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.baseline_delete_forever_24), contentDescription = "Add Event", modifier = Modifier.scale(1.6f)
+                        painter = painterResource(R.drawable.baseline_delete_forever_24), contentDescription = "Add Event", modifier = Modifier.scale(1.6f),
+                        tint = colorResource(R.color.black_green)
                     )
                 }
             }
 
         }
     }
+    if (refreshBoolean) Card() {  }
+
     return _triggerListImage
 }
 
 
 @Composable
-fun Components(_triggerList2: MutableList<Weather>): MutableList<Weather> {
-    var _triggerListImage by remember { mutableStateOf(_triggerList2) }
-    var testBoolean = remember {
-        mutableStateOf(true)
-    }
+fun Components(_triggerList: MutableList<Weather>): MutableList<Weather> {
+    var _triggerListImage by remember { mutableStateOf(_triggerList) }
+
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         for((index, triggers) in _triggerListImage.withIndex()) {
             _triggerListImage = Elements(triggers.weatherPhenomenon,_triggerListImage, index)
         }
 
-        var testList = AddDelete(_triggerListImage)
-
-        // Try
-        if(testList.size != _triggerListImage.size) {
-            testBoolean.value = false
-        }
-        _triggerListImage = testList
-
-
+        _triggerListImage = AddDelete(_triggerListImage)
 
     }
-
 
     return _triggerListImage
 }
 
 
 @Composable
-fun newHook(weatherHookEvent: WeatherHookEvent): MutableList<Weather> {
-    var triggerList2 = weatherHookEvent.triggers
-    var _triggerListImage by remember { mutableStateOf(triggerList2) }
+fun Hooks(weatherHookEvent: WeatherHookEvent): MutableList<Weather> {
+    var triggerList = weatherHookEvent.triggers
+    var _triggerListImage by remember { mutableStateOf(triggerList) }
 
     _triggerListImage = Components(_triggerListImage)
 
@@ -189,8 +181,16 @@ fun Cloudy(percentage: Float): Float {
         Row(modifier = Modifier
             .height(80.dp)
             .padding(30.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-            Icon(painter = painterResource(R.drawable.baseline_cloud_24), contentDescription = "Cloud", modifier = Modifier.scale(1.6f))
-            Slider(value = sliderPosition, valueRange = 0f..1f,  onValueChange = { sliderPosition = it }, modifier = Modifier.width(270.dp))
+            Icon(painter = painterResource(R.drawable.baseline_cloud_24), contentDescription = "Cloud", modifier = Modifier.scale(1.6f), tint = colorResource(R.color.black_green))
+            Slider(
+                value = sliderPosition,
+                valueRange = 0f..1f,
+                onValueChange = { sliderPosition = it },
+                colors = SliderDefaults.colors(thumbColor = colorResource(R.color.dark_green), activeTrackColor = colorResource(
+                    R.color.mid_green), inactiveTrackColor =  colorResource(R.color.white)),
+                modifier = Modifier
+                    .width(270.dp)
+            )
         }
     }
     return sliderPosition
@@ -212,8 +212,9 @@ fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
         Row(modifier = Modifier
             .height(80.dp)
             .padding(30.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-            Icon(painter = icon[weather-2], contentDescription = "Cloud", modifier = Modifier.scale(1.6f))
-            Slider(value = sliderPosition, onValueChange = { sliderPosition = it }, steps = (steps.toInt()-2), modifier = Modifier.width(270.dp))
+            Icon(painter = icon[weather-2], contentDescription = "Cloud", modifier = Modifier.scale(1.6f), tint = colorResource(R.color.dark_green))
+            Slider(value = sliderPosition, onValueChange = { sliderPosition = it }, colors = SliderDefaults.colors(thumbColor = colorResource(R.color.dark_green), activeTrackColor = colorResource(
+                R.color.mid_green), inactiveTrackColor =  colorResource(R.color.white)), steps = (steps.toInt()-2), modifier = Modifier.width(270.dp))
         }
     }
     return sliderPosition
@@ -222,7 +223,7 @@ fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
 
 // Temp chooser
 @Composable
-fun Temperature2(temperature: Float): String {
+fun Temperature(temperature: Float): String {
     var textTemp by remember { mutableStateOf(TextFieldValue(temperature.toInt().toString())) }
     var currentText by remember { mutableStateOf(temperature.toInt().toString()) }
     Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
@@ -233,7 +234,7 @@ fun Temperature2(temperature: Float): String {
             .padding(start = 30.dp, end = 30.dp, top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Icon(painter = painterResource(R.drawable.baseline_whatshot_24), contentDescription = "Cloud", modifier = Modifier.scale(1.6f))
             Spacer(modifier = Modifier.width(150.dp))
-            Text(text = "+", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            //Text(text = "+", fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Surface(elevation = 3.dp) {
                 BasicTextField(
                     value = textTemp,
@@ -262,11 +263,11 @@ fun Temperature2(temperature: Float): String {
             }
 
             Text(text = "°C", fontSize = 20.sp)
-            Text(text = "-", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            //Text(text = "-", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
     }
     if (currentText != null) {
         return currentText
     }
-    else return "3"
+    else return "0"
 }
