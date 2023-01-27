@@ -1,13 +1,14 @@
 package com.example.weatherhook.ui.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.repository.WeatherHookRepo
-
+import com.example.weatherhook.ui.components.Hooks
 
 
 class Prototyping : Fragment() {
@@ -37,13 +38,15 @@ class Prototyping : Fragment() {
 
 
 
-    var reloadView = 1
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
 
+
+            var testList = Hooks(data)
+            Log.d("shit", testList.toString())
 
         }
 
