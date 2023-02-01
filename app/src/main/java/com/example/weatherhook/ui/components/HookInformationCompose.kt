@@ -10,6 +10,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -71,7 +73,18 @@ fun TimeToEvent(daysToEvent: Int) {
 
 @Composable
 fun SaveAndDelete() {
-    Surface(color = colorResource(R.color.white), modifier = Modifier.fillMaxWidth().height(80.dp)) {
+    val lineColor = colorResource(R.color.black_green)
+    Surface(color = colorResource(R.color.white), modifier = Modifier
+        .fillMaxWidth()
+        .drawBehind {
+            drawLine(
+                color = lineColor,
+                start = Offset(0f, 0f),
+                end = Offset(size.width, 0f),
+                strokeWidth = 10.dp.toPx()
+            )
+        }
+        .height(80.dp)) {
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
@@ -95,24 +108,33 @@ fun SaveAndDelete() {
 
 @Composable
 fun HookInformation(weatherHookEvent: WeatherHookEvent) {
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        MapsHook(posLat = 52.520008, posLong = 13.404954)
-        HookName(weatherHookEvent.title)
-        TimeToEvent(weatherHookEvent.timeToEvent)
-        Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
-            .fillMaxWidth(),
-            border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
-            backgroundColor = colorResource(id = R.color.component_background)) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(10.dp)) {
-                Text(text = "Days of interest in the Week", color = colorResource(R.color.black_green), fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Weekdays(daysList = weatherHookEvent.relevantDays.split(";"), size = 35)
-            }
 
+    Column(verticalArrangement = Arrangement.SpaceBetween) {
+        Row(modifier = Modifier.fillMaxHeight(.90f)) {
+            Column(modifier = Modifier
+                .verticalScroll(rememberScrollState())) {
+                MapsHook(posLat = 52.520008, posLong = 13.404954)
+                Spacer(modifier = Modifier.height(15.dp))
+                HookName(weatherHookEvent.title)
+                TimeToEvent(weatherHookEvent.timeToEvent)
+                Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
+                    .fillMaxWidth(),
+                    border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
+                    backgroundColor = colorResource(id = R.color.component_background)) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(10.dp)) {
+                        Text(text = "Days of interest in the Week", color = colorResource(R.color.black_green), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                        Weekdays(daysList = weatherHookEvent.relevantDays.split(";"), size = 35)
+                    }
+
+                }
+                Hooks(weatherHookEvent = weatherHookEvent)
+
+            }
         }
-        Hooks(weatherHookEvent = weatherHookEvent)
         SaveAndDelete()
     }
+
 
 
 }
