@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.repository.WeatherHookRepo
+import com.example.weatherhook.ui.components.LocationWeather
 import com.example.weatherhook.ui.components.WeatherEventList
 import com.example.weatherhook.ui.components.WeatherForecast
 
@@ -55,6 +56,7 @@ class Home : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
+                LocationWeather(location = "Berlin, Deutschland", weather = 4, weatherTemp = 15)
                 WeatherForecast(listOfTemp)
                 WeatherEventList(data, context = requireContext())
             }

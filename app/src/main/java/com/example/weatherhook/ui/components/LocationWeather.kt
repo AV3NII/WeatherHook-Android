@@ -34,10 +34,10 @@ fun LocationWeather(location: String, weather: Int, weatherTemp: Int) {
             colorResource(id = R.color.white)
         )) {
             Spacer(modifier = Modifier.width(5.dp))
-            Text(location, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(location, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.black_green))
             Row() {
-                Icon(painter = icon[weather], contentDescription = "")
-                Text(" $weatherTemp°C", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Icon(painter = icon[weather], contentDescription = "", tint = colorResource(R.color.black_green))
+                Text(" $weatherTemp°C", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.black_green))
             }
             Spacer(modifier = Modifier.width(5.dp))
 

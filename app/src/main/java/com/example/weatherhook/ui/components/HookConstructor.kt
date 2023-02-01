@@ -1,12 +1,11 @@
 package com.example.weatherhook.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -43,9 +42,11 @@ fun Events(weather: Int): Int {
         painterResource(R.drawable.baseline_snowboarding_24),
         painterResource(R.drawable.baseline_wind_power_24),
         painterResource(R.drawable.baseline_whatshot_24))
-    Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
-        .padding(10.dp)
-        .fillMaxWidth()) {
+    Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
+        .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
+        .fillMaxWidth(),
+        border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
+        backgroundColor = colorResource(id = R.color.component_background)) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.padding(40.dp)) {
             for ((index, items) in icon.withIndex()) {
                 IconButton(onClick = {weatherSelected = index}, modifier = Modifier.size(24.dp)) {
@@ -103,9 +104,11 @@ fun AddDelete(_triggerList: MutableList<Weather>): MutableList<Weather> {
     var _triggerListImage by remember { mutableStateOf(_triggerList) }
     var refreshBoolean by remember { mutableStateOf(false) }
 
-    Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
-        .padding(10.dp)
-        .fillMaxWidth()) {
+    Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
+        .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
+        .fillMaxWidth(),
+        border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
+        backgroundColor = colorResource(id = R.color.component_background)) {
         Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.padding(20.dp)) {
             if (_triggerListImage.size <= 2) {
                 IconButton(
@@ -145,7 +148,7 @@ fun AddDelete(_triggerList: MutableList<Weather>): MutableList<Weather> {
 fun Components(_triggerList: MutableList<Weather>): MutableList<Weather> {
     var _triggerListImage by remember { mutableStateOf(_triggerList) }
 
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column() {
         for((index, triggers) in _triggerListImage.withIndex()) {
             _triggerListImage = Elements(triggers.weatherPhenomenon,_triggerListImage, index)
         }
@@ -175,9 +178,11 @@ fun Hooks(weatherHookEvent: WeatherHookEvent): MutableList<Weather> {
 @Composable
 fun Cloudy(percentage: Float): Float {
     var sliderPosition by remember { mutableStateOf(percentage) }
-    Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
-        .padding(10.dp)
-        .fillMaxWidth()) {
+    Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
+        .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
+        .fillMaxWidth(),
+        border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
+        backgroundColor = colorResource(id = R.color.component_background)) {
         Row(modifier = Modifier
             .height(80.dp)
             .padding(30.dp), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -206,9 +211,11 @@ fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
         painterResource(R.drawable.baseline_snowboarding_24),
         painterResource(R.drawable.baseline_wind_power_24))
     var sliderPosition by remember { mutableStateOf(stepsSelected) }
-    Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
-        .padding(10.dp)
-        .fillMaxWidth()) {
+    Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
+        .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
+        .fillMaxWidth(),
+        border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
+        backgroundColor = colorResource(id = R.color.component_background)) {
         Row(modifier = Modifier
             .height(80.dp)
             .padding(30.dp), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -226,9 +233,11 @@ fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
 fun Temperature(temperature: Float): String {
     var textTemp by remember { mutableStateOf(TextFieldValue(temperature.toInt().toString())) }
     var currentText by remember { mutableStateOf(temperature.toInt().toString()) }
-    Card(elevation = 5.dp, shape = RoundedCornerShape(15.dp), modifier = Modifier
-        .fillMaxWidth()
-        .padding(10.dp)) {
+    Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
+        .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
+        .fillMaxWidth(),
+        border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
+        backgroundColor = colorResource(id = R.color.component_background)) {
         Row(modifier = Modifier
             .height(80.dp)
             .padding(start = 30.dp, end = 30.dp, top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
