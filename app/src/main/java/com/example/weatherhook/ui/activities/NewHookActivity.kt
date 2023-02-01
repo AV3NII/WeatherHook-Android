@@ -12,4 +12,7 @@ class NewHookActivity : AppCompatActivity() {
         val action=supportActionBar
         action!!.title = "New Hook"
     }
+
+
+
 }

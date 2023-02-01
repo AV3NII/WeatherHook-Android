@@ -12,4 +12,6 @@ class SettingsActivity : AppCompatActivity() {
         val action=supportActionBar
         action!!.title = "Settings"
     }
+
+
 }
