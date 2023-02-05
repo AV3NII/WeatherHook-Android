@@ -1,6 +1,7 @@
 package com.example.weatherhook.ui.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,8 +44,8 @@ class Prototyping : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
 
-            HookInformation(weatherHookEvent = data)
-
+            val newEvent = HookInformation(weatherHookEvent = data)
+            Log.d("shit", newEvent.toString())
         }
 
 

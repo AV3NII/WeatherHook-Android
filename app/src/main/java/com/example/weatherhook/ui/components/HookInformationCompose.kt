@@ -20,10 +20,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
+import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.models.WeatherHookEvent
 
 @Composable
-fun HookName(eventName: String) {
+fun HookName(eventName: String):String {
     val textState = remember { mutableStateOf(TextFieldValue(eventName)) }
     Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
         .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
@@ -37,10 +38,11 @@ fun HookName(eventName: String) {
             BasicTextField(value = textState.value, onValueChange = { if(it.text.length <=20) textState.value = it }, singleLine = true, textStyle = TextStyle.Default.copy(fontSize = 17.sp, fontWeight = FontWeight.Bold))
         }
     }
+    return textState.value.text
 }
 
 @Composable
-fun TimeToEvent(daysToEvent: Int) {
+fun TimeToEvent(daysToEvent: Int):Int {
     //var sliderPosition = daysToEvent.toFloat()-1
     var sliderPosition by remember { mutableStateOf(daysToEvent.toFloat()-1) }
     Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
@@ -69,6 +71,7 @@ fun TimeToEvent(daysToEvent: Int) {
         }
 
     }
+    return sliderPosition.toInt()
 }
 
 @Composable
@@ -107,34 +110,30 @@ fun SaveAndDelete() {
 }
 
 @Composable
-fun HookInformation(weatherHookEvent: WeatherHookEvent) {
+fun HookInformation(weatherHookEvent: WeatherHookEvent):WeatherHookEvent {
+
+    var pos = Pair<Float,Float>(0.0f,0.0f)
+    var name = ""
+    var timeToEvent = -1
+    var relevantDays = ""
+    var triggers = listOf(Weather(-1,0.0f)).toMutableList()
 
     Column(verticalArrangement = Arrangement.SpaceBetween) {
         Row(modifier = Modifier.fillMaxHeight(.90f)) {
             Column(modifier = Modifier
                 .verticalScroll(rememberScrollState())) {
-                MapsHook(posLat = 52.520008, posLong = 13.404954)
+                pos = MapsHook(posLat = 52.520008, posLong = 13.404954)
                 Spacer(modifier = Modifier.height(15.dp))
-                HookName(weatherHookEvent.title)
-                TimeToEvent(weatherHookEvent.timeToEvent)
-                Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
-                    .fillMaxWidth(),
-                    border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
-                    backgroundColor = colorResource(id = R.color.component_background)) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(10.dp)) {
-                        Text(text = "Days of interest in the Week", color = colorResource(R.color.black_green), fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                        Weekdays(daysList = weatherHookEvent.relevantDays.split(";"), size = 35)
-                    }
-
-                }
-                Hooks(weatherHookEvent = weatherHookEvent)
+                name = HookName(weatherHookEvent.title)
+                timeToEvent = TimeToEvent(weatherHookEvent.timeToEvent)
+                relevantDays = WeekDaysWidget(daysList = weatherHookEvent.relevantDays.split(";"))
+                triggers = Hooks(weatherHookEvent = weatherHookEvent)
 
             }
         }
         SaveAndDelete()
     }
 
-
+    return WeatherHookEvent(weatherHookEvent.eventId, weatherHookEvent.active, name, pos, timeToEvent, relevantDays,triggers)
 
 }

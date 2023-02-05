@@ -19,12 +19,11 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 
-
 @Composable
-fun MapsHook(posLat: Double, posLong: Double) {
+fun MapsHook(posLat: Double, posLong: Double):Pair<Float,Float> {
     val lineColor = colorResource(R.color.black_green)
     val pos = LatLng(posLat, posLong)
-    val clickedPosition = remember { mutableStateOf<LatLng?>(pos) }
+    val clickedPosition = remember { mutableStateOf<LatLng>(pos) }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(pos, 10f)
     }
@@ -43,6 +42,7 @@ fun MapsHook(posLat: Double, posLong: Double) {
             clickedPosition.value = latLng
         }
     ) {
-        Marker(state = MarkerState(position = clickedPosition.value!!))
+        Marker(state = MarkerState(position = clickedPosition.value))
     }
+    return Pair<Float,Float>(clickedPosition.value.latitude.toFloat(), clickedPosition.value.longitude.toFloat())
 }
