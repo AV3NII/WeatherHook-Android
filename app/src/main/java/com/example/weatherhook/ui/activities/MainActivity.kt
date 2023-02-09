@@ -16,6 +16,11 @@ class MainActivity : AppCompatActivity() {
         val action=supportActionBar
         action!!.title = "Weather Hook Home"
 
+
+
+
+        //Log.d("APITest", callApi(this).city.toString())
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }

@@ -1,15 +1,25 @@
 package com.example.weatherhook.ui.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import com.example.weatherhook.data.api.callApi
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.repository.WeatherHookRepo
 import com.example.weatherhook.ui.components.WeatherEventList
@@ -50,13 +60,38 @@ class Home : Fragment() {
     )
 
 
+
+
     private val listOfDays = data.events[1].relevantDays.split(";")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var test = "ERROR1"
+
+
+        callApi(48.208f,12.122f,7,requireContext()) { result ->
+            if (result.cod == "200") {
+                test = result.toString()
+                Log.d("test", test)
+            } else {
+                test = result.city.name
+                Log.d("test", test)
+            }
+        }
+        
+
+        
         composeView.setContent {
+            val refresh = remember {
+                mutableStateOf(1)
+            }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
                 WeatherForecast(listOfTemp)
                 WeatherEventList(data, context = requireContext())
+                Text(text = test, fontSize = 20.sp)
+                Button(onClick = {refresh.value += 1}) {
+                }
+                Text(text = refresh.value.toString())
+                Spacer(modifier = Modifier.height(100.dp))
             }
 
             
