@@ -28,7 +28,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun newHook(view: View) {
-        val intent = Intent(this, NewHookActivity::class.java)
+        val intent = Intent(this, HookActivity::class.java)
+        intent.putExtra("currentEvent", -2)
         startActivity(intent)
 
     }

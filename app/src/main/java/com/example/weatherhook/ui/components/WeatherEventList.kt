@@ -2,7 +2,6 @@ package com.example.weatherhook.ui.components
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
 import com.example.weatherhook.data.models.WeatherHookEvent
 import com.example.weatherhook.data.models.WeatherHookEventList
-import com.example.weatherhook.ui.activities.NewHookActivity
+import com.example.weatherhook.ui.activities.HookActivity
 
 
 @Composable
@@ -46,8 +45,9 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
         .padding(10.dp)
         .height(120.dp)
         .clickable {
-            Log.d("editEvent", event.toString())
-            context.startActivity(Intent(context, NewHookActivity::class.java))
+            val intent = Intent(context, HookActivity::class.java)
+            intent.putExtra("currentEvent", event.eventId)
+            context.startActivity(intent)
         },
         elevation = 5.dp,
         shape = RoundedCornerShape(25.dp),
