@@ -48,7 +48,7 @@ fun WeekDaysWidget(daysList: List<String>):String{
 
 
 @Composable
-fun Weekdays(daysList: List<String>, size: Int, klickable: Boolean):List<String> {
+fun Weekdays(daysList: List<String>, size: Int, clickable: Boolean):List<String> {
     val _daysList = remember { mutableStateOf(daysList) }
     val week = listOf("MO","TU","WE","TH","FR","SA","SU")
 
@@ -75,9 +75,9 @@ fun Weekdays(daysList: List<String>, size: Int, klickable: Boolean):List<String>
                         .width(size.dp)
                         .background(colorResource(id = R.color.light_green_bg))
                         .clickable(onClick = {
-                            if (klickable && _daysList.value.contains(day)) {
+                            if (clickable && _daysList.value.contains(day)) {
                                 _daysList.value -= day
-                            } else if (klickable && !_daysList.value.contains(day)) {
+                            } else if (clickable && !_daysList.value.contains(day)) {
                                 _daysList.value += day
                             }
                         })
@@ -101,9 +101,6 @@ fun Weekdays(daysList: List<String>, size: Int, klickable: Boolean):List<String>
                     )
                 }
             }
-        }
-        if (_daysList != daysList){
-            Box(){}
         }
 
 
