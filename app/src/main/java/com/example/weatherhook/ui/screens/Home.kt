@@ -56,7 +56,7 @@ class Home : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
-                LocationWeather(location = "Berlin, Deutschland", weather = 4, weatherTemp = 15)
+                LocationWeather(context = requireContext(), weather = 4, weatherTemp = 15)
                 WeatherForecast(listOfTemp)
                 WeatherEventList(data, context = requireContext())
             }

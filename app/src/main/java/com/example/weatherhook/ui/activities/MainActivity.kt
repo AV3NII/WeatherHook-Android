@@ -9,11 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherhook.databinding.ActivityMainBinding
-import com.example.weatherhook.notifications.*
+import com.example.weatherhook.services.notificationService.*
+import com.google.android.gms.location.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
 
 
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
+        pushNotificationPermissionLauncher.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O) {
             pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)

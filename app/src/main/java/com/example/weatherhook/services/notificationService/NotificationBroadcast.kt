@@ -1,4 +1,4 @@
-package com.example.weatherhook.notifications
+package com.example.weatherhook.services.notificationService
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
