@@ -2,7 +2,6 @@ package com.example.weatherhook.ui.components
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,12 +24,12 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
 import com.example.weatherhook.data.models.WeatherHookEvent
 import com.example.weatherhook.data.models.WeatherHookEventList
-import com.example.weatherhook.ui.activities.NewHookActivity
+import com.example.weatherhook.ui.activities.HookActivity
 
 
 @Composable
 fun WeatherHook(event: WeatherHookEvent,context: Context) {
-    var active = remember { mutableStateOf(event.active) }
+    val active = remember { mutableStateOf(event.active) }
 
     var icon:Painter = painterResource(id = R.drawable.ic_baseline_anchor_24)
     when(event.triggers[0].weatherPhenomenon){
@@ -46,8 +45,9 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
         .padding(10.dp)
         .height(120.dp)
         .clickable {
-            Log.d("editEvent", event.toString())
-            context.startActivity(Intent(context, NewHookActivity::class.java))
+            val intent = Intent(context, HookActivity::class.java)
+            intent.putExtra("currentEvent", event.eventId)
+            context.startActivity(intent)
         },
         elevation = 5.dp,
         shape = RoundedCornerShape(25.dp),
@@ -74,7 +74,7 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
             Column(modifier = Modifier.padding(start = 5.dp)) {
                 Text(text = event.title, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 10.dp, bottom = 5.dp, top = 10.dp))
                 Text(text = "Time to event: ${event.timeToEvent} Day(s)", modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
-                Weekdays(event.relevantDays.split(";"), 20)
+                Weekdays(event.relevantDays.split(";"), 20, false)
             }
             Column(modifier = Modifier.padding(end = 20.dp)) {
                 Switch(modifier = Modifier

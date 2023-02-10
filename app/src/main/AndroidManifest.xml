@@ -30,11 +30,11 @@
         <activity
             android:name=".ui.activities.MapsActivity"
             android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:label="MapsActivity" />
         <activity
-            android:name=".ui.activities.NewHookActivity"
+            android:name=".ui.activities.HookActivity"
             android:exported="false"
-            android:label="NewHookActivity" />
+            android:label="HookActivity" />
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:exported="false" >

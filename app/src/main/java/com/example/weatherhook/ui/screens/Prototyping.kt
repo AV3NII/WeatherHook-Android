@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.repository.WeatherHookRepo
-import com.example.weatherhook.ui.components.HookInformation
 
 
 class Prototyping : Fragment() {
@@ -43,7 +42,6 @@ class Prototyping : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
 
-            HookInformation(weatherHookEvent = data)
 
         }
 

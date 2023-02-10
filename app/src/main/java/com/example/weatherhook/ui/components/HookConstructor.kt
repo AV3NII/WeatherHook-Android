@@ -1,7 +1,7 @@
 package com.example.weatherhook.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -10,13 +10,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -233,6 +233,13 @@ fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
 fun Temperature(temperature: Float): String {
     var textTemp by remember { mutableStateOf(TextFieldValue(temperature.toInt().toString())) }
     var currentText by remember { mutableStateOf(temperature.toInt().toString()) }
+
+    fun isNumeric(toCheck: String): Boolean {
+        if (toCheck == ""){return true}
+        val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+        return toCheck.matches(regex)
+    }
+
     Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
         .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
         .fillMaxWidth(),
@@ -243,30 +250,43 @@ fun Temperature(temperature: Float): String {
             .padding(start = 30.dp, end = 30.dp, top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Icon(painter = painterResource(R.drawable.baseline_whatshot_24), contentDescription = "Cloud", modifier = Modifier.scale(1.6f))
             Spacer(modifier = Modifier.width(150.dp))
-            //Text(text = "+", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Surface(elevation = 3.dp) {
+            Surface(modifier = Modifier.drawWithContent {
+                drawContent()
+                val strokeWidth = 5f
+                val y = size.height - 10f
+                drawLine(
+                    color = Color(R.color.black_green),
+                    Offset(0f, y),
+                    Offset(size.width, y),
+                    strokeWidth
+                )
+            }) {
                 BasicTextField(
+                    singleLine = true,
                     value = textTemp,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                    ),
+
                     onValueChange = {
-                        if (it.text.length <= 2) {
+                        if (isNumeric(it.text) && it.text.length<= 2) {
                             textTemp = it
                             currentText = it.text
                         }
                     },
+
                     modifier = Modifier
                         .width(60.dp)
                         .height(40.dp)
+                        .background(color = colorResource(id = R.color.component_background))
                         .fillMaxSize(),
-                    textStyle = TextStyle.Default.copy(fontSize = 27.sp, textAlign = TextAlign.Center),
-                    cursorBrush = Brush.verticalGradient(colors = listOf(Color(0xFF2193b0), Color(0xFF6dd5ed))),
-                    interactionSource = MutableInteractionSource(),
 
-                    decorationBox = { innerTextField ->
-                        Row() {
-                            innerTextField()
-                        }
-                    }
+                    textStyle = TextStyle.Default.copy(
+                        fontSize = 27.sp,
+                        textAlign = TextAlign.Center,
+                        color = colorResource(id = R.color.black_green)
+                    ),
+
 
                 )
             }
