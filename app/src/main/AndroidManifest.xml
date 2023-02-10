@@ -20,7 +20,7 @@
         android:theme="@style/Theme.WeatherHook"
         tools:targetApi="33" >
 
-        <receiver android:name=".notifications.NotificationBroadcast"
+        <receiver android:name=".services.notificationService.NotificationBroadcast"
             android:enabled="true"/>
 
         <meta-data
