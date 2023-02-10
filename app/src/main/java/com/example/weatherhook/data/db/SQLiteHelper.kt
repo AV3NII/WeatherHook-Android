@@ -38,6 +38,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         //Tables triggers columns
         private const val TRIGGER_ID = "triggerId"
         private const val PHENOMENON = "phenomenon"
+        private const val CHECKMORETHAN = "checkMoreThan"
         private const val CORRESPONDING_INTENSITY = "correspondingIntensity"
 
     }
@@ -53,6 +54,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             "$TRIGGER_ID INTEGER NOT NULL PRIMARY KEY,"+
             "$PHENOMENON INTEGER NOT NULL,"+
             "$CORRESPONDING_INTENSITY FLOAT NOT NULL,"+
+            "$CHECKMORETHAN BOOL NOT NULL,"+
             "$EVENT_KEY INTEGER NOT NULL,"+
             "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
 
@@ -131,7 +133,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         try {
             var query = ""
             for (trigger in triggers){
-                query += "INSERT INTO $TABLE_TRIGGERS($PHENOMENON, $CORRESPONDING_INTENSITY,$EVENT_KEY) VALUES (${trigger.weatherPhenomenon},${trigger.correspondingIntensity},$eventId);"
+                query += "INSERT INTO $TABLE_TRIGGERS($PHENOMENON, $CORRESPONDING_INTENSITY, $CHECKMORETHAN,$EVENT_KEY) VALUES (${trigger.weatherPhenomenon},${trigger.correspondingIntensity},${trigger.checkMoreThan},$eventId);"
             }
             db.execSQL(query)
             db.setTransactionSuccessful()
@@ -184,7 +186,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             if (response.moveToFirst()){
 
                 do {
-                    triggers.add(Weather(response.getInt(1),response.getFloat(2)))
+                    triggers.add(Weather(response.getInt(1),response.getFloat(2),response.getString(3).toBoolean()))
 
                 }while (response.moveToNext())
             }

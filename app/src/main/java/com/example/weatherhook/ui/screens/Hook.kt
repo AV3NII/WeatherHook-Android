@@ -37,7 +37,7 @@ class Hook : Fragment() {
                 location = Pair(13.405f,52.52f),
                 timeToEvent = 3,
                 relevantDays = "MO;TU;WE;TH;FR",
-                triggers = listOf(Weather(weatherPhenomenon = 0, correspondingIntensity = 1f)).toMutableList()
+                triggers = listOf(Weather(weatherPhenomenon = 0, correspondingIntensity = 1f, true)).toMutableList()
             )
         }
 

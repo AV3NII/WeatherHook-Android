@@ -34,8 +34,8 @@ fun Events(weather: Int): Int {
 
     var weatherSelected by remember { mutableStateOf(weather) }
 
-    var backgroundColor = colorResource(id = R.color.light_green)
-    var backgroundColorSelected = colorResource(id = R.color.black_green)
+    val backgroundColor = colorResource(id = R.color.light_green)
+    val backgroundColorSelected = colorResource(id = R.color.black_green)
     val icon = arrayOf(painterResource(id = R.drawable.baseline_wb_sunny_24),
         painterResource(id = R.drawable.baseline_cloud_24),
         painterResource(R.drawable.baseline_grain_24),
@@ -48,7 +48,7 @@ fun Events(weather: Int): Int {
         border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
         backgroundColor = colorResource(id = R.color.component_background)) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.padding(40.dp)) {
-            for ((index, items) in icon.withIndex()) {
+            for ((index) in icon.withIndex()) {
                 IconButton(onClick = {weatherSelected = index}, modifier = Modifier.size(24.dp)) {
                     Icon(painter = icon[index], contentDescription = "Icon $index", Modifier.scale(1.6f), tint = if (weatherSelected == index) {backgroundColorSelected} else backgroundColor)
                 }
@@ -62,24 +62,36 @@ fun Events(weather: Int): Int {
 @Composable
 fun Elements(weatherPhenomen: Int,_triggerList: MutableList<Weather>, index: Int): MutableList<Weather> {
     var selectedWeather by remember { mutableStateOf(weatherPhenomen) }
-    var _triggerListImage by remember { mutableStateOf(_triggerList) }
+    val _triggerListImage by remember { mutableStateOf(_triggerList) }
+
     selectedWeather = Events(_triggerList[index].weatherPhenomenon)
     Column {
         when (selectedWeather) {
             0 -> {_triggerListImage[index].correspondingIntensity = 1f
                 }
-            1 -> {_triggerListImage[index].correspondingIntensity = Cloudy(_triggerList[index].correspondingIntensity)
+            1 -> {val data = Cloudy(_triggerList[index].correspondingIntensity, _triggerList[index].checkMoreThan)
+                _triggerListImage[index].correspondingIntensity = data.first
+                _triggerListImage[index].checkMoreThan = data.second
                 }
-            2 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(2,steps = 4f, _triggerList[index].correspondingIntensity)
+            2 -> {val data = SliderSteps(2,steps = 4f, _triggerList[index].correspondingIntensity, _triggerList[index].checkMoreThan)
+                _triggerListImage[index].correspondingIntensity = data.first
+                _triggerListImage[index].checkMoreThan = data.second
                 }
-            3 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(3,steps = 4f, _triggerList[index].correspondingIntensity)
+            3 -> {val data = SliderSteps(3,steps = 4f, _triggerList[index].correspondingIntensity, _triggerList[index].checkMoreThan)
+                _triggerListImage[index].correspondingIntensity = data.first
+                _triggerListImage[index].checkMoreThan = data.second
                 }
-            4 -> {_triggerListImage[index].correspondingIntensity = SliderSteps(4,steps = 6f, _triggerList[index].correspondingIntensity)
+            4 -> {val data = SliderSteps(4,steps = 6f, _triggerList[index].correspondingIntensity, _triggerList[index].checkMoreThan)
+                _triggerListImage[index].correspondingIntensity = data.first
+                _triggerListImage[index].checkMoreThan = data.second
                 }
-            5 -> {var temp = Temperature(_triggerList[index].correspondingIntensity).toFloatOrNull()
-                if (temp == null) {temp = 0f}
+            5 -> {val data = Temperature(_triggerList[index].correspondingIntensity,_triggerList[index].checkMoreThan)
+                var temp = data.first.toFloatOrNull()
+                if (temp == null) {temp = 0f}//should never be executed
                 _triggerListImage[index].correspondingIntensity = temp
-                }
+                _triggerListImage[index].checkMoreThan = data.second
+            }
+
             else -> {}
         }
     }
@@ -95,7 +107,7 @@ fun deleteLastElement(_triggerList: MutableList<Weather>): MutableList<Weather> 
 
 
 fun addTrigger(_triggerList: MutableList<Weather>): MutableList<Weather> {
-    _triggerList.add(Weather(0, 0f))
+    _triggerList.add(Weather(0, 0f,true))
     return _triggerList
 }
 
@@ -163,7 +175,7 @@ fun Components(_triggerList: MutableList<Weather>): MutableList<Weather> {
 
 @Composable
 fun Hooks(weatherHookEvent: WeatherHookEvent): MutableList<Weather> {
-    var triggerList = weatherHookEvent.triggers
+    val triggerList = weatherHookEvent.triggers
     var _triggerListImage by remember { mutableStateOf(triggerList) }
 
     _triggerListImage = Components(_triggerListImage)
@@ -176,8 +188,10 @@ fun Hooks(weatherHookEvent: WeatherHookEvent): MutableList<Weather> {
 
 // Slider without steps -> Cloudy
 @Composable
-fun Cloudy(percentage: Float): Float {
+fun Cloudy(percentage: Float,checkMoreThan:Boolean): Pair<Float,Boolean> {
     var sliderPosition by remember { mutableStateOf(percentage) }
+    var _checkMoreThan by remember { mutableStateOf(checkMoreThan) }
+
     Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
         .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
         .fillMaxWidth(),
@@ -187,6 +201,26 @@ fun Cloudy(percentage: Float): Float {
             .height(80.dp)
             .padding(30.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             Icon(painter = painterResource(R.drawable.baseline_cloud_24), contentDescription = "Cloud", modifier = Modifier.scale(1.6f), tint = colorResource(R.color.black_green))
+            Spacer(modifier = Modifier.width(20.dp))
+            if (_checkMoreThan){
+                IconButton(onClick = { _checkMoreThan = false}) {
+                    Icon(painter = painterResource(id = R.drawable.baseline_arrow_drop_up_24),
+                        contentDescription = "checkAbove",
+                        modifier = Modifier.scale(2.5f),
+                        tint = colorResource(R.color.light_green)
+                    )
+                }
+            }else{
+                IconButton(onClick = { _checkMoreThan = true}) {
+                    Icon(painter = painterResource(id = R.drawable.baseline_arrow_drop_down_24),
+                        contentDescription = "checkBeneath",
+                        modifier = Modifier.scale(2.5f),
+                        tint = colorResource(R.color.light_green)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(5.dp))
             Slider(
                 value = sliderPosition,
                 valueRange = 0f..1f,
@@ -194,16 +228,18 @@ fun Cloudy(percentage: Float): Float {
                 colors = SliderDefaults.colors(thumbColor = colorResource(R.color.dark_green), activeTrackColor = colorResource(
                     R.color.mid_green), inactiveTrackColor =  colorResource(R.color.white)),
                 modifier = Modifier
-                    .width(270.dp)
+                    .width(250.dp)
             )
+
         }
     }
-    return sliderPosition
+
+    return Pair<Float,Boolean>(sliderPosition,_checkMoreThan)
 }
 
 // Slider with steps for multi-use
 @Composable
-fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
+fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float,checkMoreThan:Boolean): Pair<Float,Boolean> {
 
     // 100% -> SliderSteps(n, n-1)
 
@@ -211,6 +247,7 @@ fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
         painterResource(R.drawable.baseline_snowboarding_24),
         painterResource(R.drawable.baseline_wind_power_24))
     var sliderPosition by remember { mutableStateOf(stepsSelected) }
+    var _checkMoreThan by remember { mutableStateOf(checkMoreThan) }
     Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
         .padding(start = 20.dp, end = 20.dp, top = 15.dp, bottom = 15.dp)
         .fillMaxWidth(),
@@ -220,19 +257,40 @@ fun SliderSteps(weather: Int,steps: Float, stepsSelected: Float): Float {
             .height(80.dp)
             .padding(30.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             Icon(painter = icon[weather-2], contentDescription = "Cloud", modifier = Modifier.scale(1.6f), tint = colorResource(R.color.dark_green))
+            Spacer(modifier = Modifier.width(20.dp))
+            if (_checkMoreThan){
+                IconButton(onClick = { _checkMoreThan = false}) {
+                    Icon(painter = painterResource(id = R.drawable.baseline_arrow_drop_up_24),
+                        contentDescription = "checkAbove",
+                        modifier = Modifier.scale(2.5f),
+                        tint = colorResource(R.color.light_green)
+                    )
+                }
+            }else{
+                IconButton(onClick = { _checkMoreThan = true}) {
+                    Icon(painter = painterResource(id = R.drawable.baseline_arrow_drop_down_24),
+                        contentDescription = "checkBeneath",
+                        modifier = Modifier.scale(2.5f),
+                        tint = colorResource(R.color.light_green)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(5.dp))
             Slider(value = sliderPosition, onValueChange = { sliderPosition = it }, colors = SliderDefaults.colors(thumbColor = colorResource(R.color.dark_green), activeTrackColor = colorResource(
                 R.color.mid_green), inactiveTrackColor =  colorResource(R.color.white)), steps = (steps.toInt()-2), modifier = Modifier.width(270.dp))
         }
     }
-    return sliderPosition
+    return Pair<Float,Boolean>(sliderPosition,_checkMoreThan)
 }
 
 
 // Temp chooser
 @Composable
-fun Temperature(temperature: Float): String {
+fun Temperature(temperature: Float,checkMoreThan:Boolean): Pair<String,Boolean> {
     var textTemp by remember { mutableStateOf(TextFieldValue(temperature.toInt().toString())) }
     var currentText by remember { mutableStateOf(temperature.toInt().toString()) }
+    var _checkMoreThan by remember { mutableStateOf(checkMoreThan) }
 
     fun isNumeric(toCheck: String): Boolean {
         if (toCheck == ""){return true}
@@ -249,7 +307,24 @@ fun Temperature(temperature: Float): String {
             .height(80.dp)
             .padding(start = 30.dp, end = 30.dp, top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Icon(painter = painterResource(R.drawable.baseline_whatshot_24), contentDescription = "Cloud", modifier = Modifier.scale(1.6f))
-            Spacer(modifier = Modifier.width(150.dp))
+            Spacer(modifier = Modifier.width(130.dp))
+            if (_checkMoreThan){
+                IconButton(onClick = { _checkMoreThan = false}) {
+                    Icon(painter = painterResource(id = R.drawable.baseline_arrow_drop_up_24),
+                        contentDescription = "checkAbove",
+                        modifier = Modifier.scale(2.5f),
+                        tint = colorResource(R.color.light_green)
+                    )
+                }
+            }else{
+                IconButton(onClick = { _checkMoreThan = true}) {
+                    Icon(painter = painterResource(id = R.drawable.baseline_arrow_drop_down_24),
+                        contentDescription = "checkBeneath",
+                        modifier = Modifier.scale(2.5f),
+                        tint = colorResource(R.color.light_green)
+                    )
+                }
+            }
             Surface(modifier = Modifier.drawWithContent {
                 drawContent()
                 val strokeWidth = 5f
@@ -292,11 +367,10 @@ fun Temperature(temperature: Float): String {
             }
 
             Text(text = "°C", fontSize = 20.sp)
-            //Text(text = "-", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
     }
-    if (currentText != null) {
-        return currentText
+    if (currentText != "" || currentText !=null) {
+        return Pair<String,Boolean>(currentText,_checkMoreThan)
     }
-    else return "0"
+    else return Pair<String,Boolean>("0",_checkMoreThan)
 }
