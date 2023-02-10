@@ -41,22 +41,21 @@ class Home : Fragment() {
     }
 
     var listOfTemp = listOf<Weather>(
-        Weather(0, 20f),
-        Weather(1, 15f),
-        Weather(4, 9f),
-        Weather(4, 12f),
-        Weather(1, 17f),
-        Weather(0, 22f),
-        Weather(0, 16f),
+        Weather(0, 20f,true),
+        Weather(1, 15f,true),
+        Weather(4, 9f, true),
+        Weather(4, 12f,true),
+        Weather(1, 17f,true),
+        Weather(0, 22f,true),
+        Weather(0, 16f,true),
     )
 
 
-    private val listOfDays = data.events[1].relevantDays.split(";")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
-                LocationWeather(context = requireContext(), weather = 4, weatherTemp = 15)
+                LocationWeather(context = requireContext(),4, 15)
                 WeatherForecast(listOfTemp)
                 WeatherEventList(data, context = requireContext())
             }

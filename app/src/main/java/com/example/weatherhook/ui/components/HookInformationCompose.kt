@@ -132,7 +132,7 @@ fun HookInformation(weatherHookEvent: WeatherHookEvent):WeatherHookEvent {
     var name = ""
     var timeToEvent = -1
     var relevantDays = ""
-    var triggers = listOf(Weather(-1,0.0f)).toMutableList()
+    var triggers = listOf(Weather(-1,0.0f,false)).toMutableList()
 
     Column(verticalArrangement = Arrangement.SpaceBetween) {
         Row(modifier = Modifier.fillMaxHeight(.90f)) {
