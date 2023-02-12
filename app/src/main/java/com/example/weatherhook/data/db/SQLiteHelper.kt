@@ -38,30 +38,32 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         //Tables triggers columns
         private const val TRIGGER_ID = "triggerId"
         private const val PHENOMENON = "phenomenon"
+        private const val CHECKMORETHAN = "checkMoreThan"
         private const val CORRESPONDING_INTENSITY = "correspondingIntensity"
 
     }
     override fun onCreate(db: SQLiteDatabase?) {
         val createTableWeatherHookEvents = "CREATE TABLE $TABLE_WEATHER_HOOK_EVENTS (" +
-                "$EVENT_ID INTEGER PRIMARY KEY ,"+
-                "$ACTIVE BOOL NOT NULL,"+
-                "$TITLE VARCHAR(20) NOT NULL,"+
-                "$TIME_TO_EVENT INT NOT NULL,"+
-                "$RELEVANT_DAYS VARCHAR(20) NOT NULL)"
+            "$EVENT_ID INTEGER PRIMARY KEY ,"+
+            "$ACTIVE BOOL NOT NULL,"+
+            "$TITLE VARCHAR(20) NOT NULL,"+
+            "$TIME_TO_EVENT INT NOT NULL,"+
+            "$RELEVANT_DAYS VARCHAR(20) NOT NULL)"
 
         val createTableTriggers = "CREATE TABLE $TABLE_TRIGGERS (" +
-                "$TRIGGER_ID INTEGER NOT NULL PRIMARY KEY,"+
-                "$PHENOMENON INTEGER NOT NULL,"+
-                "$CORRESPONDING_INTENSITY FLOAT NOT NULL,"+
-                "$EVENT_KEY INTEGER NOT NULL,"+
-                "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
+            "$TRIGGER_ID INTEGER NOT NULL PRIMARY KEY,"+
+            "$PHENOMENON INTEGER NOT NULL,"+
+            "$CORRESPONDING_INTENSITY FLOAT NOT NULL,"+
+            "$CHECKMORETHAN BOOL NOT NULL,"+
+            "$EVENT_KEY INTEGER NOT NULL,"+
+            "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
 
         val createTableLocations = "CREATE TABLE $TABLE_LOCATIONS (" +
-                "$LOCATION_ID INTEGER PRIMARY KEY ,"+
-                "$LATITUDE FLOAT NOT NULL,"+
-                "$LONGITUDE FLOAT NOT NULL,"+
-                "$EVENT_KEY INTEGER UNIQUE NOT NULL,"+
-                "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
+            "$LOCATION_ID INTEGER PRIMARY KEY ,"+
+            "$LATITUDE FLOAT NOT NULL,"+
+            "$LONGITUDE FLOAT NOT NULL,"+
+            "$EVENT_KEY INTEGER UNIQUE NOT NULL,"+
+            "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
 
 
         db?.execSQL(createTableWeatherHookEvents)
@@ -131,7 +133,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         try {
             var query = ""
             for (trigger in triggers){
-                query += "INSERT INTO $TABLE_TRIGGERS($PHENOMENON, $CORRESPONDING_INTENSITY,$EVENT_KEY) VALUES (${trigger.weatherPhenomenon},${trigger.correspondingIntensity},$eventId);"
+                query += "INSERT INTO $TABLE_TRIGGERS($PHENOMENON, $CORRESPONDING_INTENSITY, $CHECKMORETHAN,$EVENT_KEY) VALUES (${trigger.weatherPhenomenon},${trigger.correspondingIntensity},${trigger.checkMoreThan},$eventId);"
             }
             db.execSQL(query)
             db.setTransactionSuccessful()
@@ -184,7 +186,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             if (response.moveToFirst()){
 
                 do {
-                    triggers.add(Weather(response.getInt(1),response.getFloat(2)))
+                    triggers.add(Weather(response.getInt(1),response.getFloat(2),response.getString(3).toBoolean()))
 
                 }while (response.moveToNext())
             }
@@ -228,4 +230,6 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
 
 }
+
+
 

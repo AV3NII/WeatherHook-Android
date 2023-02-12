@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.Prototyping">
-
+    tools:context=".ui.screens.Hook">
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeView"
@@ -16,4 +15,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,7 @@ class WeatherHookRepo {
             gson.fromJson(jsonString, WeatherHookEventList::class.java)
         } catch (e: Exception) {
             Log.e("DataRepository", "Error loading json data", e)
-            return WeatherHookEventList( listOf(WeatherHookEvent(eventId = 0, active = false, title = "Error", location = Pair(0.2f,0.3f), timeToEvent = 2, relevantDays = "MO", triggers = listOf(Weather(weatherPhenomenon = 2, correspondingIntensity = 2f)).toMutableList())).toMutableList()
+            return WeatherHookEventList( listOf(WeatherHookEvent(eventId = 0, active = false, title = "Error", location = Pair(0.2f,0.3f), timeToEvent = 2, relevantDays = "MO", triggers = listOf(Weather(weatherPhenomenon = 2, correspondingIntensity = 2f,false)).toMutableList())).toMutableList()
             )
 
         }
@@ -36,7 +36,8 @@ class WeatherHookRepo {
       "triggers": [
         {
           "weatherPhenomenon": 0,
-          "correspondingIntensity": 0f
+          "correspondingIntensity": 0f,
+          "ckeckMoreThan": true
         }
       ]
     },
@@ -53,11 +54,13 @@ class WeatherHookRepo {
       "triggers": [
         {
           "weatherPhenomenon": 1,
-          "correspondingIntensity": 0.5f
+          "correspondingIntensity": 0.5f,
+          "ckeckMoreThan": true
         },
         {
           "weatherPhenomenon": 5,
-          "correspondingIntensity": 18f
+          "correspondingIntensity": 18f,
+          "checkMoreThan": false
         }
       ]
     },
@@ -74,11 +77,13 @@ class WeatherHookRepo {
       "triggers": [
         {
           "weatherPhenomenon": 4,
-          "correspondingIntensity": 3f
+          "correspondingIntensity": 3f,
+          "checkMoreThan": true
         },
         {
           "weatherPhenomenon": 5,
-          "correspondingIntensity": 20f
+          "correspondingIntensity": 20f,
+          "checkMoreThan": true
         }
       ]
     },
@@ -95,11 +100,13 @@ class WeatherHookRepo {
       "triggers": [
         {
           "weatherPhenomenon": 1,
-          "correspondingIntensity": 0.7f
+          "correspondingIntensity": 0.7f,
+          "ckeckMoreThan": true
         },
         {
           "weatherPhenomenon": 2,
-          "correspondingIntensity": 1f
+          "correspondingIntensity": 1f,
+          "ckeckMoreThan": true
         }
       ]
     },
@@ -116,7 +123,8 @@ class WeatherHookRepo {
       "triggers": [
         {
           "weatherPhenomenon": 0,
-          "correspondingIntensity": 0f
+          "correspondingIntensity": 0f,
+          "ckeckMoreThan": true
         }
       ]
     },
@@ -133,11 +141,13 @@ class WeatherHookRepo {
       "triggers": [
         {
           "weatherPhenomenon": 1,
-          "correspondingIntensity": 0.5f
+          "correspondingIntensity": 0.5f,
+          "ckeckMoreThan": true
         },
         {
           "weatherPhenomenon": 5,
-          "correspondingIntensity": 18f
+          "correspondingIntensity": 18f,
+          "ckeckMoreThan": true
         }
       ]
     },
@@ -154,11 +164,13 @@ class WeatherHookRepo {
       "triggers": [
         {
           "weatherPhenomenon": 4,
-          "correspondingIntensity": 3f
+          "correspondingIntensity": 3f,
+          "ckeckMoreThan": true
         },
         {
           "weatherPhenomenon": 5,
-          "correspondingIntensity": 20f
+          "correspondingIntensity": 20f,
+          "ckeckMoreThan": true
         }
       ]
     },
@@ -175,11 +187,13 @@ class WeatherHookRepo {
       "triggers": [
         {
           "weatherPhenomenon": 1,
-          "correspondingIntensity": 0.7f
+          "correspondingIntensity": 0.7f,
+          "ckeckMoreThan": true
         },
         {
           "weatherPhenomenon": 2,
-          "correspondingIntensity": 1f
+          "correspondingIntensity": 1f,
+          "ckeckMoreThan": true
         }
       ]
     }

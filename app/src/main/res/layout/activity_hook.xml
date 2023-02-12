@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.activities.NewHookActivity">
+    tools:context=".ui.activities.HookActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
-        android:name="com.example.weatherhook.ui.screens.Prototyping"
+        android:name="com.example.weatherhook.ui.screens.Hook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -17,7 +17,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_prototyping" />
+        tools:layout="@layout/fragment_hook" />
 
 
 

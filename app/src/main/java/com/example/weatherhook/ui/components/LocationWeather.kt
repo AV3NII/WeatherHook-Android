@@ -1,5 +1,7 @@
 package com.example.weatherhook.ui.components
 
+import LocationService
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -14,8 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
 
+
 @Composable
-fun LocationWeather(location: String, weather: Int, weatherTemp: Int) {
+fun LocationWeather(context: Context, weatherPhenomenon: Int, weatherTemp: Int) {
+
+
+    val locationName = LocationService().getLocationName(context)
 
     val icon = arrayOf(
         painterResource(R.drawable.baseline_wb_sunny_24),
@@ -23,7 +29,8 @@ fun LocationWeather(location: String, weather: Int, weatherTemp: Int) {
         painterResource(R.drawable.baseline_grain_24),
         painterResource(R.drawable.baseline_snowboarding_24),
         painterResource(R.drawable.baseline_wind_power_24),
-        painterResource(R.drawable.baseline_whatshot_24),)
+        painterResource(R.drawable.baseline_whatshot_24),
+    )
 
 
     Surface(modifier = Modifier
@@ -34,14 +41,17 @@ fun LocationWeather(location: String, weather: Int, weatherTemp: Int) {
             colorResource(id = R.color.white)
         )) {
             Spacer(modifier = Modifier.width(5.dp))
-            Text(location, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(locationName, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.black_green))
             Row() {
-                Icon(painter = icon[weather], contentDescription = "")
-                Text(" $weatherTemp°C", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Icon(painter = icon[weatherPhenomenon], contentDescription = "", tint = colorResource(R.color.black_green))
+                Text(" $weatherTemp°C", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.black_green))
             }
             Spacer(modifier = Modifier.width(5.dp))
 
+
+
         }
     }
+
 
 }

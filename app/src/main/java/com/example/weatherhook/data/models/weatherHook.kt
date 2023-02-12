@@ -16,7 +16,8 @@ data class WeatherHookEvent(
 
 data class Weather (
     var weatherPhenomenon:Int,
-    var correspondingIntensity: Float
+    var correspondingIntensity: Float,
+    var checkMoreThan:Boolean,
 )
 
 data class WeatherHookEventList(val events: MutableList<WeatherHookEvent>)

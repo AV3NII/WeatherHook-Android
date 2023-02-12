@@ -17,31 +17,24 @@ class Prototyping : Fragment() {
     private lateinit var composeView: ComposeView
 
     val repo: WeatherHookRepo = WeatherHookRepo()
-    val data = repo.loadAllData()
+    val data = repo.loadAllData().events[1]
 
-    
-    @OptIn(DelicateCoroutinesApi::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
 
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-
         return ComposeView(requireContext()).also {
             composeView = it
-
         }
     }
-
 
 
 
@@ -49,11 +42,8 @@ class Prototyping : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         composeView.setContent {
 
-            Text(text = "asdf")
-            
 
         }
 
@@ -61,5 +51,3 @@ class Prototyping : Fragment() {
     }
 
 }
-
-

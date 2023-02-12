@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.api.callApi
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.repository.WeatherHookRepo
+import com.example.weatherhook.ui.components.LocationWeather
 import com.example.weatherhook.ui.components.WeatherEventList
 import com.example.weatherhook.ui.components.WeatherForecast
 
@@ -50,19 +51,16 @@ class Home : Fragment() {
     }
 
     var listOfTemp = listOf<Weather>(
-        Weather(0, 20f),
-        Weather(1, 15f),
-        Weather(4, 9f),
-        Weather(4, 12f),
-        Weather(1, 17f),
-        Weather(0, 22f),
-        Weather(0, 16f),
+        Weather(0, 20f,true),
+        Weather(1, 15f,true),
+        Weather(4, 9f, true),
+        Weather(4, 12f,true),
+        Weather(1, 17f,true),
+        Weather(0, 22f,true),
+        Weather(0, 16f,true),
     )
 
 
-
-
-    private val listOfDays = data.events[1].relevantDays.split(";")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var test = "ERROR1"
@@ -77,14 +75,15 @@ class Home : Fragment() {
                 Log.d("test", test)
             }
         }
-        
 
-        
+
+
         composeView.setContent {
             val refresh = remember {
                 mutableStateOf(1)
             }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
+                LocationWeather(context = requireContext(),4, 15)
                 WeatherForecast(listOfTemp)
                 WeatherEventList(data, context = requireContext())
                 Text(text = test, fontSize = 20.sp)
