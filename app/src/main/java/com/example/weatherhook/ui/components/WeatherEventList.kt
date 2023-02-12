@@ -72,8 +72,12 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
                 }
             }
             Column(modifier = Modifier.padding(start = 5.dp)) {
-                Text(text = event.title, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 10.dp, bottom = 5.dp, top = 10.dp))
-                Text(text = "Time to event: ${event.timeToEvent} Day(s)", modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
+                Text(text = event.title, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 10.dp, bottom = 5.dp, top = 10.dp),color = colorResource(
+                    id = R.color.black_green
+                ))
+                Text(text = "Time to event: ${event.timeToEvent} Day(s)", modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),color = colorResource(
+                    id = R.color.mid_green
+                ))
                 Weekdays(event.relevantDays.split(";"), 20, false)
             }
             Column(modifier = Modifier.padding(end = 20.dp)) {

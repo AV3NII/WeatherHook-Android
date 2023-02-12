@@ -306,7 +306,7 @@ fun Temperature(temperature: Float,checkMoreThan:Boolean): Pair<String,Boolean> 
         Row(modifier = Modifier
             .height(80.dp)
             .padding(start = 30.dp, end = 30.dp, top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Icon(painter = painterResource(R.drawable.baseline_whatshot_24), contentDescription = "Cloud", modifier = Modifier.scale(1.6f))
+            Icon(painter = painterResource(R.drawable.baseline_whatshot_24), contentDescription = "temp", modifier = Modifier.scale(1.6f), tint = colorResource(id = R.color.dark_green))
             Spacer(modifier = Modifier.width(130.dp))
             if (_checkMoreThan){
                 IconButton(onClick = { _checkMoreThan = false}) {
