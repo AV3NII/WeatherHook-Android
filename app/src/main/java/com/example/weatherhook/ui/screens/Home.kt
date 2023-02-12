@@ -22,8 +22,8 @@ import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.api.callApi
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.repository.WeatherHookRepo
-import com.example.weatherhook.ui.components.LocationWeather
 import com.example.weatherhook.ui.components.WeatherEventList
+import com.example.weatherhook.ui.components.LocationWeather
 import com.example.weatherhook.ui.components.WeatherForecast
 
 
