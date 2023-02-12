@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,16 +51,30 @@ fun WeatherForecast(forcastData: ForcastData) {
 
             for (( index, day) in days.withIndex()) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Surface(shape = RoundedCornerShape(5.dp), modifier = Modifier.border(3.dp, if(currentDayFormatted == index+1)colorResource(
-                        id = R.color.mid_green
-                    ) else colorResource(id = R.color.dark_green), RoundedCornerShape(5.dp)))
+                    Surface(shape = RoundedCornerShape(5.dp),
+                        modifier = Modifier
+                            .border(
+                                3.dp,
+                                if (currentDayFormatted == index + 1) colorResource(id = R.color.mid_green)
+                                else colorResource(id = R.color.dark_green),
+                                RoundedCornerShape(5.dp)
+                            )
+                    )
                      {
                         Box(modifier = Modifier
-                            .background(colorResource(id = R.color.dark_green))
+                            .background(
+                                if (currentDayFormatted == index + 1) colorResource(id = R.color.mid_green)
+                                else colorResource(
+                                    id = R.color.dark_green
+                                ), RoundedCornerShape(5.dp)
+                            )
                             .padding(top = 2.dp, bottom = 2.dp, start = 5.dp, end = 5.dp)) {
-                            Text(text = day, textAlign = TextAlign.Center, color = colorResource(
-                                id = R.color.light_green
-                            ))
+                            if (currentDayFormatted == index + 1){
+                                Text(text = day, textAlign = TextAlign.Center,fontWeight = FontWeight.Bold, color = colorResource(id = R.color.black_black))
+                            }else{
+                                Text(text = day, textAlign = TextAlign.Center,fontWeight = FontWeight.Normal, color = colorResource(id = R.color.light_green))
+                            }
+
                         }
                     }
 
@@ -69,10 +84,13 @@ fun WeatherForecast(forcastData: ForcastData) {
                             .scale(1f)
                             .padding(top = 5.dp, bottom = 5.dp))
 
-                    Text(text = "${kelvinToCelsius(forcastData.data.find { it.weekDay == days[index] }!!.tempHigh)} °C", textAlign = TextAlign.Center, fontSize = 12.sp)
-                    Text(text = "${kelvinToCelsius(forcastData.data.find { it.weekDay == days[index] }!!.tempLow)} °C", textAlign = TextAlign.Center, fontSize = 12.sp)
+                    Text(text = "${kelvinToCelsius(forcastData.data.find { it.weekDay == days[index] }!!.tempHigh)} °C", textAlign = TextAlign.Center, fontSize = 12.sp,color = colorResource(
+                                id = R.color.dark_green
+                            ))
+                    Text(text = "${kelvinToCelsius(forcastData.data.find { it.weekDay == days[index] }!!.tempLow)} °C", textAlign = TextAlign.Center, fontSize = 12.sp ,color = colorResource(
+                                id = R.color.mid_green
+                            ))
                 }
-
 
             }
 
