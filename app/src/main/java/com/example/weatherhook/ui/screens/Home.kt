@@ -43,10 +43,10 @@ class Home : Fragment() {
 
     private var forcast = ForcastData(
         listOf(
-            ForcastDay("MO","01d", 273.64f, 275.15f),
+            ForcastDay("MO","01d", 288.65f, 275.15f),
             ForcastDay("TU","03d", 273.64f, 275.15f),
             ForcastDay("WE","09n", 273.64f, 275.15f),
-            ForcastDay("TH","10d", 273.64f, 275.15f),
+            ForcastDay("TH","50d", 273.64f, 275.15f),
             ForcastDay("FR","11n", 273.64f, 275.15f),
             ForcastDay("SA","13n", 273.64f, 275.15f),
             ForcastDay("SU","error", 273.64f, 275.15f),

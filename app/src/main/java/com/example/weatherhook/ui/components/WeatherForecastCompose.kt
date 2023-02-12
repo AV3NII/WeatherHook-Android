@@ -34,12 +34,11 @@ fun WeatherForecast(forcastData: ForcastData) {
 
     val calendar = Calendar.getInstance()
     val current = calendar.get(Calendar.DAY_OF_WEEK)
-    var currentDayFormatted = 0
-    if (current == 1) currentDayFormatted = 7
-    else currentDayFormatted = current - 1
+    val currentDayFormatted = if (current == 1) 7 else  current - 1
+
 
     fun kelvinToCelsius(kelvin: Float):Float{
-        return String.format("%.1f",(kelvin - 273.15)).toFloat()
+        return Math.round((kelvin - 273.15)*10f)/10f
     }
 
     Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
