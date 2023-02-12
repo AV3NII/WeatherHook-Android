@@ -19,6 +19,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import com.example.weatherhook.data.models.ForcastData
+import com.example.weatherhook.data.models.ForcastDay
 import com.example.weatherhook.data.api.callApi
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.repository.WeatherHookRepo
@@ -50,14 +52,16 @@ class Home : Fragment() {
         }
     }
 
-    var listOfTemp = listOf<Weather>(
-        Weather(0, 20f,true),
-        Weather(1, 15f,true),
-        Weather(4, 9f, true),
-        Weather(4, 12f,true),
-        Weather(1, 17f,true),
-        Weather(0, 22f,true),
-        Weather(0, 16f,true),
+    private var forcast = ForcastData(
+        listOf(
+            ForcastDay("MO","01d", 273.64f, 275.15f),
+            ForcastDay("TU","03d", 273.64f, 275.15f),
+            ForcastDay("WE","09n", 273.64f, 275.15f),
+            ForcastDay("TH","10d", 273.64f, 275.15f),
+            ForcastDay("FR","11n", 273.64f, 275.15f),
+            ForcastDay("SA","13n", 273.64f, 275.15f),
+            ForcastDay("SU","error", 273.64f, 275.15f),
+        )
     )
 
 
@@ -84,7 +88,7 @@ class Home : Fragment() {
             }
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
                 LocationWeather(context = requireContext(),4, 15)
-                WeatherForecast(listOfTemp)
+                WeatherForecast(forcast)
                 WeatherEventList(data, context = requireContext())
                 Text(text = test, fontSize = 20.sp)
                 Button(onClick = {refresh.value += 1}) {
