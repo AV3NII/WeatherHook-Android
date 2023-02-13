@@ -1,6 +1,7 @@
 package com.example.weatherhook.ui.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.ForcastData
 import com.example.weatherhook.data.models.ForcastDay
 import com.example.weatherhook.data.repository.WeatherHookRepo
@@ -22,11 +24,17 @@ class Home : Fragment() {
 
     private lateinit var composeView: ComposeView
 
-    val repo: WeatherHookRepo = WeatherHookRepo()
-    val data = repo.loadAllData()
+    val repo= WeatherHookRepo()
+    var data = repo.loadAllData()
+
+    lateinit var db: SQLiteHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        db = SQLiteHelper(requireContext())
+        data = db.getAllEvents()
+        Log.e("shit", data.toString())
         arguments?.let {
 
         }
@@ -60,7 +68,8 @@ class Home : Fragment() {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
                 LocationWeather(context = requireContext(),4, 15)
                 WeatherForecast(forcast)
-                WeatherEventList(data, context = requireContext())
+                if (data.events.size >= 0) WeatherEventList(data, context = requireContext())
+
             }
 
             

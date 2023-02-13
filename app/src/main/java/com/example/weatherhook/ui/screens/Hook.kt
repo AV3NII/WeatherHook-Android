@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.models.WeatherHookEvent
 import com.example.weatherhook.data.repository.WeatherHookRepo
@@ -22,8 +23,11 @@ class Hook : Fragment() {
     val repo: WeatherHookRepo = WeatherHookRepo()
     var data = repo.loadAllData().events[0]
 
+    lateinit var db: SQLiteHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        db = SQLiteHelper(requireContext())
 
         val activity = activity as HookActivity
         val eventId = activity.intent.getIntExtra("currentEvent", -1)
@@ -61,7 +65,7 @@ class Hook : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
 
-            val newEvent = HookInformation(weatherHookEvent = data)
+            val newEvent = HookInformation(weatherHookEvent = data, db)
             Log.d("shit", newEvent.toString())
 
         }

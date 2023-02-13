@@ -4,10 +4,12 @@ import android.app.*
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.databinding.ActivityMainBinding
 import com.example.weatherhook.services.notificationService.*
 import com.google.android.gms.location.*
@@ -30,6 +32,9 @@ class MainActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_main)
         val action=supportActionBar
         action!!.title = "Weather Hook Home"
+
+        val db = SQLiteHelper(this)
+        Log.e("shit", db.getAllEvents().toString())
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

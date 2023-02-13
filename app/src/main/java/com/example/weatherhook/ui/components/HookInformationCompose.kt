@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
+import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.models.WeatherHookEvent
 
@@ -91,7 +92,15 @@ fun TimeToEvent(daysToEvent: Int):Int {
 }
 
 @Composable
-fun SaveAndDelete() {
+fun SaveAndDelete(
+    pos: Pair<Float, Float>,
+    name: String,
+    active: Boolean,
+    timeToEvent: Int,
+    relevantDays: String,
+    triggers: MutableList<Weather>,
+    db: SQLiteHelper
+) {
     val lineColor = colorResource(R.color.black_green)
     Surface(color = colorResource(R.color.white), modifier = Modifier
         .fillMaxWidth()
@@ -116,7 +125,11 @@ fun SaveAndDelete() {
             }
 
             Button(
-                onClick = {}, modifier = Modifier.width(150.dp),
+                onClick = {
+                    db.addEvent(WeatherHookEvent(0,active,name,pos,timeToEvent,relevantDays,triggers))
+                    db.addLocation(pos,1)
+                    db.addTriggers(triggers,1)
+                }, modifier = Modifier.width(150.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(R.color.dark_green))
             ) {
                 Text(text = "Save", color = colorResource(R.color.white), fontSize = 15.sp)
@@ -126,7 +139,7 @@ fun SaveAndDelete() {
 }
 
 @Composable
-fun HookInformation(weatherHookEvent: WeatherHookEvent):WeatherHookEvent {
+fun HookInformation(weatherHookEvent: WeatherHookEvent, db: SQLiteHelper):WeatherHookEvent {
 
     var pos = Pair<Float,Float>(0.0f,0.0f)
     var name = ""
@@ -147,7 +160,7 @@ fun HookInformation(weatherHookEvent: WeatherHookEvent):WeatherHookEvent {
 
             }
         }
-        SaveAndDelete()
+        SaveAndDelete(pos,name,weatherHookEvent.active,timeToEvent,relevantDays,triggers,db)
     }
 
     return WeatherHookEvent(weatherHookEvent.eventId, weatherHookEvent.active, name, pos, timeToEvent, relevantDays,triggers)

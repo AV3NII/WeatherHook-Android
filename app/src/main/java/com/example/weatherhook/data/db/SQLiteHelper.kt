@@ -206,7 +206,6 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         val db = writableDatabase
         val eventsList= WeatherHookEventList(listOf<WeatherHookEvent>().toMutableList())
         db.beginTransaction()
-
         try {
             val query = "SELECT * FROM $TABLE_WEATHER_HOOK_EVENTS"
             val response = db.rawQuery(query,null)
