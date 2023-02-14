@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         val action=supportActionBar
         action!!.title = "Weather Hook Home"
 
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

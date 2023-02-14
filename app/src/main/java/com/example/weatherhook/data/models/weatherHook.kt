@@ -1,7 +1,7 @@
 package com.example.weatherhook.data.models
 
 data class WeatherHookEvent(
-    val eventId: Int,
+    var eventId: Int,
     var active: Boolean,
     var title: String,
 
