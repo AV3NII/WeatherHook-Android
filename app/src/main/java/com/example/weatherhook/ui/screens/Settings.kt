@@ -26,6 +26,7 @@ import com.example.weatherhook.R
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.WeatherHookEventList
 import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.ui.activities.MainActivity
 
 
 class Settings : Fragment() {
@@ -109,6 +110,17 @@ class Settings : Fragment() {
                     )
                     ) {
                         Text(text = "Open Notification Settings", color = Color.White)
+                    }
+
+                    Spacer(modifier = Modifier.height(40.dp))
+                    Button(onClick = {
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        requireContext().startActivity(intent)
+                    }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(
+                        R.color.mid_green)
+                    )
+                    ) {
+                        Text(text = "Save Settings", fontWeight = FontWeight.Bold, color = colorResource(id = R.color.black_black))
                     }
                 }
             }

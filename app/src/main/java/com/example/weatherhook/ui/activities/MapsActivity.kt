@@ -1,27 +1,37 @@
 package com.example.weatherhook.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
+import LocationService
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherhook.R
-
+import com.example.weatherhook.data.db.SQLiteHelper
+import com.example.weatherhook.data.models.WeatherHookEventList
+import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.example.weatherhook.databinding.ActivityMapsBinding
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
 
+    private var repo = DatabaseRepo()
+    private lateinit var data: WeatherHookEventList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val db = SQLiteHelper(this)
+        data = repo.getAllEvents(db)
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -33,11 +43,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(50.0, 151.0)
-        val sydney2 = LatLng(50.5, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.addMarker(MarkerOptions().position(sydney2).title("Marker in Sydney2"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val posPair = LocationService().getLocationPair(this)
+        val camPos = LatLng(posPair.first.toDouble(),posPair.second.toDouble())
+
+        data.events.forEach { event ->
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(
+                        LatLng(
+                            event.location.first.toDouble(),
+                            event.location.second.toDouble()
+                        )
+                    )
+                    .title(
+                        event.title
+                    )
+            )
+        }
+
+        val cameraPosition = CameraPosition.Builder()
+            .target(camPos)
+            .zoom(9f)
+            .tilt(30f)
+            .build()
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+
     }
 }
