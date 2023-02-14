@@ -22,13 +22,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
+import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.WeatherHookEvent
 import com.example.weatherhook.data.models.WeatherHookEventList
+import com.example.weatherhook.data.repository.DatabaseRepo
 import com.example.weatherhook.ui.activities.HookActivity
 
 
 @Composable
-fun WeatherHook(event: WeatherHookEvent,context: Context) {
+fun WeatherHook(event: WeatherHookEvent,context: Context,db:SQLiteHelper) {
     val active = remember { mutableStateOf(event.active) }
 
     var icon:Painter = painterResource(id = R.drawable.ic_baseline_anchor_24)
@@ -41,12 +43,13 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
         5 -> {icon = painterResource(R.drawable.ic_baseline_settings_24)}
     }
 
+
     return Card(modifier = Modifier
         .padding(10.dp)
         .height(120.dp)
         .clickable {
             val intent = Intent(context, HookActivity::class.java)
-            intent.putExtra("currentEvent", event.eventId)
+            intent.putExtra("currentEvent", event.eventId -1) //-1 because db index starts with 1 whereas lists with 0
             context.startActivity(intent)
         },
         elevation = 5.dp,
@@ -82,8 +85,15 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
             }
             Column(modifier = Modifier.padding(end = 20.dp)) {
                 Switch(modifier = Modifier
-                    .fillMaxSize()
-                    .scale(1.3f), checked = active.value, onCheckedChange = {active.value = it})
+                        .fillMaxSize()
+                        .scale(1.3f),
+                    checked = active.value,
+                    onCheckedChange = {
+                        active.value = it
+                        event.active = active.value
+                        DatabaseRepo().updateEvent(event,context,db)
+                    }
+                )
             }
 
 
@@ -92,17 +102,18 @@ fun WeatherHook(event: WeatherHookEvent,context: Context) {
 }
 
 @Composable
-fun WeatherEventList(weatherHookEventList: WeatherHookEventList,context: Context) {
+fun WeatherEventList(weatherHookEventList: WeatherHookEventList,context: Context,db: SQLiteHelper) {
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding( top = Dp(5f))
-        .padding(start = 10.dp, end = 10.dp)) {
+        .padding(start = 10.dp, end = 10.dp))
+    {
 
-            weatherHookEventList.events.forEach{
+        weatherHookEventList.events.forEach{
 
-                WeatherHook(event = it, context)
+            WeatherHook(event = it, context,db)
 
-            }
+        }
         
         Spacer(modifier = Modifier.padding(45.dp))
     }

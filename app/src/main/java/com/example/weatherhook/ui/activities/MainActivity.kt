@@ -4,12 +4,9 @@ import android.app.*
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.databinding.ActivityMainBinding
 import com.example.weatherhook.services.notificationService.*
 import com.google.android.gms.location.*
@@ -27,21 +24,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_main)
         val action=supportActionBar
         action!!.title = "Weather Hook Home"
 
-        val db = SQLiteHelper(this)
-        Log.e("shit", db.getAllEvents().toString())
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
         pushNotificationPermissionLauncher.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-
+//TODO: What if lower than tiramisu (API 33)
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O) {
             pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             createNotificationChannel()}
@@ -50,20 +46,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun openMap(view: View) {
+    fun openMap() {
         val intent = Intent(this, MapsActivity::class.java)
         startActivity(intent)
 
     }
 
-    fun newHook(view: View) {
+    fun newHook() {
         val intent = Intent(this, HookActivity::class.java)
         intent.putExtra("currentEvent", -2)
         startActivity(intent)
 
     }
 
-    fun openSettings(view: View) {
+    fun openSettings() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
 

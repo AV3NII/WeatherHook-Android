@@ -21,7 +21,6 @@
     <string name="FR">FR</string>
     <string name="SA">SA</string>
     <string name="SU">SU</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <!-- Week fragment end                              -->
 </resources>

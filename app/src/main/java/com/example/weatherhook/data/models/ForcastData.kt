@@ -1,11 +1,11 @@
 package com.example.weatherhook.data.models
 
-data class ForcastDay (
+data class ForecastDay (
     val weekDay: String,
     val icon: String,
     val tempLow: Float,
     val tempHigh: Float,
 )
-data class ForcastData(
-    val data: List<ForcastDay>
+data class ForecastData(
+    val data: List<ForecastDay>
 )

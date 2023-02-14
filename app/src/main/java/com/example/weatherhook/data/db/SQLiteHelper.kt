@@ -38,7 +38,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         //Tables triggers columns
         private const val TRIGGER_ID = "triggerId"
         private const val PHENOMENON = "phenomenon"
-        private const val CHECKMORETHAN = "checkMoreThan"
+        private const val CHECK_MORE_THAN = "checkMoreThan"
         private const val CORRESPONDING_INTENSITY = "correspondingIntensity"
 
     }
@@ -54,7 +54,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             "$TRIGGER_ID INTEGER NOT NULL PRIMARY KEY,"+
             "$PHENOMENON INTEGER NOT NULL,"+
             "$CORRESPONDING_INTENSITY FLOAT NOT NULL,"+
-            "$CHECKMORETHAN BOOL NOT NULL,"+
+            "$CHECK_MORE_THAN BOOL NOT NULL,"+
             "$EVENT_KEY INTEGER NOT NULL,"+
             "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
 
@@ -91,14 +91,15 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         db.beginTransaction()
 
         try {
-            val query = "INSERT INTO $TABLE_WEATHER_HOOK_EVENTS($ACTIVE, $TITLE, $TIME_TO_EVENT, $RELEVANT_DAYS) VALUES (${event.active},${event.title}, ${event.timeToEvent}, ${event.relevantDays});"
+            val query = "INSERT INTO $TABLE_WEATHER_HOOK_EVENTS($ACTIVE, $TITLE, $TIME_TO_EVENT, $RELEVANT_DAYS) VALUES (${event.active}, \"${event.title}\", ${event.timeToEvent}, \"${event.relevantDays}\");"
 
             db.execSQL(query)
             db.setTransactionSuccessful()
 
             return true
         } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to add user to database")
+            Log.e("DbHelper", "Error while trying to add Event to database")
+            Log.e("DbHelper",e.message!!)
         } finally {
             db.endTransaction()
         }
@@ -111,13 +112,14 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         db.beginTransaction()
 
         try {
-            val query = "INSERT INTO $TABLE_LOCATIONS($LONGITUDE, $LATITUDE;$EVENT_KEY) VALUES (${location.first},${location.second}, $eventId)"
+            val query = "INSERT INTO $TABLE_LOCATIONS($LONGITUDE, $LATITUDE, $EVENT_KEY) VALUES (${location.first}, ${location.second}, $eventId);"
             db.execSQL(query)
             db.setTransactionSuccessful()
 
             return true
         } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to add user to database")
+            Log.e("DbHelper", "Error while trying to add Location to database")
+            Log.e("DbHelper",e.message!!)
 
         } finally {
             db.endTransaction()
@@ -131,16 +133,19 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         db.beginTransaction()
 
         try {
-            var query = ""
-            for (trigger in triggers){
-                query += "INSERT INTO $TABLE_TRIGGERS($PHENOMENON, $CORRESPONDING_INTENSITY, $CHECKMORETHAN,$EVENT_KEY) VALUES (${trigger.weatherPhenomenon},${trigger.correspondingIntensity},${trigger.checkMoreThan},$eventId);"
+
+            Log.e("shit", triggers.toString())
+            triggers.forEach { trigger ->
+                val query = "INSERT INTO $TABLE_TRIGGERS($PHENOMENON, $CORRESPONDING_INTENSITY, $CHECK_MORE_THAN, $EVENT_KEY) VALUES (${trigger.weatherPhenomenon},${trigger.correspondingIntensity},${trigger.checkMoreThan},$eventId);"
+                db.execSQL(query)
             }
-            db.execSQL(query)
+
             db.setTransactionSuccessful()
 
             return true
         } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to add user to database")
+            Log.e("DbHelper", "Error while trying to add Triggers to database")
+            Log.e("DbHelper",e.message!!)
         } finally {
             db.endTransaction()
         }
@@ -148,19 +153,21 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
     }
 
 
+    //GET Functions
 
-    fun getLocationsWithId(eventId: Int):Pair<Float,Float>{
+
+    fun getLocationWithId(eventId: Int):Pair<Float,Float>{
         val db = writableDatabase
         val location:Pair<Float,Float>
 
         db.beginTransaction()
-
+//TODO: check if map is receifing Location in right order ? -> change column lables to be correct
         try {
             val query = "SELECT * FROM $TABLE_LOCATIONS where $EVENT_KEY = $eventId;"
             val response = db.rawQuery(query,null)
             if (response.moveToFirst()){
 
-                location = Pair(response.getFloat(2), response.getFloat(3))
+                location = Pair(response.getFloat(1), response.getFloat(2))
                 response.close()
                 return location
 
@@ -169,7 +176,8 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
 
         } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to add user to database")
+            Log.e("DbHelper", "Error while trying to get Location from database")
+            Log.e("DbHelper",e.message!!)
         } finally {
             db.endTransaction()
         }
@@ -181,7 +189,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         db.beginTransaction()
 
         try {
-            val query = "SELECT * FROM $TABLE_TRIGGERS where EVENT_KEY=$eventId;"
+            val query = "SELECT * FROM $TABLE_TRIGGERS where $EVENT_KEY = $eventId;"
             val response = db.rawQuery(query,null)
             if (response.moveToFirst()){
 
@@ -195,14 +203,16 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
             return triggers
         } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to add user to database")
+
+            Log.e("DbHelper", "Error while trying to get Triggers from database")
+            Log.e("DbHelper",e.message!!)
         } finally {
             db.endTransaction()
         }
         return triggers
     }
 
-    fun getAllEvents():WeatherHookEventList{
+    fun getEvents():WeatherHookEventList{
         val db = writableDatabase
         val eventsList= WeatherHookEventList(listOf<WeatherHookEvent>().toMutableList())
         db.beginTransaction()
@@ -211,7 +221,10 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             val response = db.rawQuery(query,null)
             if (response.moveToFirst()){
                 do{
-                    eventsList.events.add(WeatherHookEvent(response.getInt(0),response.getString(1).toBoolean(),response.getString(2),getLocationsWithId(response.getInt(0)),response.getInt(3), response.getString(4),getAllTriggersWithId(response.getInt(0))))
+                    val location = Pair(-1f,-1f)
+                    val triggers = listOf<Weather>().toMutableList()
+
+                    eventsList.events.add(WeatherHookEvent(response.getInt(0),response.getInt(1) > 0,response.getString(2),location,response.getInt(3), response.getString(4),triggers))
                 }while(response.moveToNext())
 
             }
@@ -220,13 +233,67 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
             return eventsList
         } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to add user to database")
+            Log.e("DbHelper", "Error while trying to get all Events from database")
+            Log.e("DbHelper",e.message!!)
         } finally {
             db.endTransaction()
         }
         return eventsList
     }
 
+    fun getLastIdFromEventsTable():Int{
+        val db = writableDatabase
+        var result = -1
+        db.beginTransaction()
+        try {
+            val query = "SELECT MAX($EVENT_ID) FROM $TABLE_WEATHER_HOOK_EVENTS"
+            val response = db.rawQuery(query,null)
+            if (response.moveToFirst()){
+
+                result = response.getInt(0)
+            }
+            response.close()
+            db.setTransactionSuccessful()
+
+            return result
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to get highest Id in EventsTable from database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return result
+    }
+
+
+    //Update Functions
+    fun updateEvent(weatherHookEvent: WeatherHookEvent):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+        try {
+            var query = "UPDATE $TABLE_WEATHER_HOOK_EVENTS SET $ACTIVE = ${weatherHookEvent.active}, $TITLE = \"${weatherHookEvent.title}\", $TIME_TO_EVENT = ${weatherHookEvent.timeToEvent}, $RELEVANT_DAYS = \"${weatherHookEvent.relevantDays}\" WHERE $EVENT_ID = ${weatherHookEvent.eventId};"
+
+            query += "UPDATE $TABLE_LOCATIONS SET $LONGITUDE = ${weatherHookEvent.location.first}, $LATITUDE = ${weatherHookEvent.location.second} WHERE $EVENT_ID = ${weatherHookEvent.eventId};"
+
+            //TODO: What if new trigger was added? Update wouldn´t work
+            for (trigger in weatherHookEvent.triggers){
+                query += "UPDATE $TABLE_TRIGGERS SET $PHENOMENON = ${trigger.weatherPhenomenon}, $CORRESPONDING_INTENSITY = ${trigger.correspondingIntensity}, $CHECK_MORE_THAN = ${trigger.checkMoreThan} WHERE $EVENT_ID = ${weatherHookEvent.eventId};"
+            }
+
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to update event in database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
 
 }
 

@@ -1,5 +1,8 @@
 package com.example.weatherhook.ui.components
 
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -23,6 +26,8 @@ import com.example.weatherhook.R
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.models.WeatherHookEvent
+import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.ui.activities.MainActivity
 
 @Composable
 fun HookName(eventName: String):String {
@@ -92,15 +97,7 @@ fun TimeToEvent(daysToEvent: Int):Int {
 }
 
 @Composable
-fun SaveAndDelete(
-    pos: Pair<Float, Float>,
-    name: String,
-    active: Boolean,
-    timeToEvent: Int,
-    relevantDays: String,
-    triggers: MutableList<Weather>,
-    db: SQLiteHelper
-) {
+fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLiteHelper) {
     val lineColor = colorResource(R.color.black_green)
     Surface(color = colorResource(R.color.white), modifier = Modifier
         .fillMaxWidth()
@@ -118,7 +115,9 @@ fun SaveAndDelete(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(
-                onClick = {}, modifier = Modifier.width(150.dp),
+                onClick = {
+//TODO: Create delete and hook it up
+                }, modifier = Modifier.width(150.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(R.color.signal_red))
             ) {
                 Text(text = "Delete", color = colorResource(R.color.white), fontSize = 15.sp)
@@ -126,9 +125,26 @@ fun SaveAndDelete(
 
             Button(
                 onClick = {
-                    db.addEvent(WeatherHookEvent(0,active,name,pos,timeToEvent,relevantDays,triggers))
-                    db.addLocation(pos,1)
-                    db.addTriggers(triggers,1)
+                    if (weatherHookEvent.eventId == -2) {
+                        DatabaseRepo()
+                            .addNewWeatherHookToDb(
+                                weatherHookEvent,
+                                context,
+                                db
+                            )
+                    }else if (weatherHookEvent.eventId == -1){
+                        Toast.makeText(context,"Something went wrong (ID = -1)",Toast.LENGTH_LONG).show()
+                    }else{
+                        DatabaseRepo()
+                            .updateEvent(
+                                weatherHookEvent,
+                                context,
+                                db
+                            )
+                    }
+                    val intent = Intent(context, MainActivity::class.java)
+                    context.startActivity(intent)
+
                 }, modifier = Modifier.width(150.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(R.color.dark_green))
             ) {
@@ -139,9 +155,9 @@ fun SaveAndDelete(
 }
 
 @Composable
-fun HookInformation(weatherHookEvent: WeatherHookEvent, db: SQLiteHelper):WeatherHookEvent {
+fun HookInformation(weatherHookEvent: WeatherHookEvent, context:Context, db: SQLiteHelper ):WeatherHookEvent {
 
-    var pos = Pair<Float,Float>(0.0f,0.0f)
+    var pos = Pair(0.0f,0.0f)
     var name = ""
     var timeToEvent = -1
     var relevantDays = ""
@@ -160,9 +176,14 @@ fun HookInformation(weatherHookEvent: WeatherHookEvent, db: SQLiteHelper):Weathe
 
             }
         }
-        SaveAndDelete(pos,name,weatherHookEvent.active,timeToEvent,relevantDays,triggers,db)
+                weatherHookEvent.location = pos
+                weatherHookEvent.title = name
+                weatherHookEvent.timeToEvent = timeToEvent
+                weatherHookEvent.relevantDays = relevantDays
+                weatherHookEvent.triggers = triggers
+
+        SaveAndDelete(weatherHookEvent,context,db)
     }
 
-    return WeatherHookEvent(weatherHookEvent.eventId, weatherHookEvent.active, name, pos, timeToEvent, relevantDays,triggers)
-
+    return weatherHookEvent
 }

@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.example.weatherhook.data.repository.WeatherHookRepo
+import com.example.weatherhook.data.db.SQLiteHelper
+import com.example.weatherhook.data.models.WeatherHookEventList
+import com.example.weatherhook.data.repository.DatabaseRepo
 
 
 class Prototyping : Fragment() {
@@ -14,12 +16,14 @@ class Prototyping : Fragment() {
 
     private lateinit var composeView: ComposeView
 
-    val repo: WeatherHookRepo = WeatherHookRepo()
-    val data = repo.loadAllData().events[1]
-
+    val repo = DatabaseRepo()
+    private lateinit var data:WeatherHookEventList
+    private lateinit var db:SQLiteHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        db = SQLiteHelper(requireContext())
+        data = repo.getAllEvents(db)
         arguments?.let {
 
         }
