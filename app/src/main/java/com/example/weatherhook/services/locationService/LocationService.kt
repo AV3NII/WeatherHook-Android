@@ -52,16 +52,13 @@ class LocationService {
         return locationName
     }
 
-    fun getLocationPair(context: Context): Pair<Float, Float>? {
+    fun getLocationPair(context: Context): Pair<Float, Float> {
         val location = getLocationLongLat(context)
 
-        if (location != null) {
-            var locationPair = Pair<Float, Float>(location.longitude.toFloat(), location.latitude.toFloat())
-            return locationPair
-        }
-        else {
-            var locationPair = Pair<Float, Float>(-1f, -2f)
-            return locationPair
+        return if (location != null) {
+            Pair(location.latitude.toFloat(), location.longitude.toFloat())
+        } else {
+            Pair(52.520008f, 13.404954f)
         }
 
     }

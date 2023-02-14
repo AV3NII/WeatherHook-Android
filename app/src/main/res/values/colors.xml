@@ -2,7 +2,7 @@
 <resources>
     <color name="screen_background">#E5E9E3</color>
     <color name="component_background">#D1DCCC</color>
-    <color name="black_black">#343734</color>
+    <color name="black_black">#323532</color>
     <color name="black_green">#2F3E46</color>
     <color name="dark_green">#354F52</color>
     <color name="mid_green">#52796F</color>
