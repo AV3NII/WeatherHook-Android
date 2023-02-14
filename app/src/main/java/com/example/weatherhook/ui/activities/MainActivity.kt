@@ -4,6 +4,7 @@ import android.app.*
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_main)
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
 
         pushNotificationPermissionLauncher.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-//TODO: What if lower than tiramisu (API 33)
+
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O) {
             pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             createNotificationChannel()}
@@ -46,20 +46,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun openMap() {
+    fun openMap(view: View) {
         val intent = Intent(this, MapsActivity::class.java)
         startActivity(intent)
 
     }
 
-    fun newHook() {
+    fun newHook(view: View) {
         val intent = Intent(this, HookActivity::class.java)
         intent.putExtra("currentEvent", -2)
         startActivity(intent)
 
     }
 
-    fun openSettings() {
+    fun openSettings(view: View) {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
 

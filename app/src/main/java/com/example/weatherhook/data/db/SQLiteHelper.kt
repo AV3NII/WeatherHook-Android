@@ -112,7 +112,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         db.beginTransaction()
 
         try {
-            val query = "INSERT INTO $TABLE_LOCATIONS($LONGITUDE, $LATITUDE, $EVENT_KEY) VALUES (${location.first}, ${location.second}, $eventId);"
+            val query = "INSERT INTO $TABLE_LOCATIONS( $LATITUDE,$LONGITUDE, $EVENT_KEY) VALUES (${location.first}, ${location.second}, $eventId);"
             db.execSQL(query)
             db.setTransactionSuccessful()
 
@@ -134,7 +134,6 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
         try {
 
-            Log.e("shit", triggers.toString())
             triggers.forEach { trigger ->
                 val query = "INSERT INTO $TABLE_TRIGGERS($PHENOMENON, $CORRESPONDING_INTENSITY, $CHECK_MORE_THAN, $EVENT_KEY) VALUES (${trigger.weatherPhenomenon},${trigger.correspondingIntensity},${trigger.checkMoreThan},$eventId);"
                 db.execSQL(query)
@@ -152,16 +151,38 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         return false
     }
 
+    fun addTrigger(trigger: Weather, eventId: Int):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+
+        try {
+            val query = "INSERT INTO $TABLE_TRIGGERS($PHENOMENON, $CORRESPONDING_INTENSITY, $CHECK_MORE_THAN, $EVENT_KEY) VALUES (${trigger.weatherPhenomenon},${trigger.correspondingIntensity},${trigger.checkMoreThan},$eventId);"
+            db.execSQL(query)
+
+
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to add Trigger to database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
+
 
     //GET Functions
 
 
     fun getLocationWithId(eventId: Int):Pair<Float,Float>{
-        val db = writableDatabase
+        val db = readableDatabase
         val location:Pair<Float,Float>
 
         db.beginTransaction()
-//TODO: check if map is receifing Location in right order ? -> change column lables to be correct
+
         try {
             val query = "SELECT * FROM $TABLE_LOCATIONS where $EVENT_KEY = $eventId;"
             val response = db.rawQuery(query,null)
@@ -184,7 +205,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         return Pair(-1f,-1f)
     }
     fun getAllTriggersWithId(eventId: Int):MutableList<Weather>{
-        val db = writableDatabase
+        val db = readableDatabase
         val triggers:MutableList<Weather> = listOf<Weather>().toMutableList()
         db.beginTransaction()
 
@@ -213,7 +234,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
     }
 
     fun getEvents():WeatherHookEventList{
-        val db = writableDatabase
+        val db = readableDatabase
         val eventsList= WeatherHookEventList(listOf<WeatherHookEvent>().toMutableList())
         db.beginTransaction()
         try {
@@ -242,7 +263,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
     }
 
     fun getLastIdFromEventsTable():Int{
-        val db = writableDatabase
+        val db = readableDatabase
         var result = -1
         db.beginTransaction()
         try {
@@ -265,6 +286,34 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         return result
     }
 
+    fun getIdsFromTriggersWithEventId(eventId: Int):MutableList<Int>{
+        val db = readableDatabase
+        val result = mutableListOf<Int>()
+        db.beginTransaction()
+        try {
+            val query = "SELECT $TRIGGER_ID FROM $TABLE_TRIGGERS WHERE $EVENT_KEY = $eventId"
+            val response = db.rawQuery(query,null)
+
+            if (response.moveToFirst()){
+                do{
+                    result += response.getInt(0)
+
+                }while(response.moveToNext())
+            }
+
+            response.close()
+            db.setTransactionSuccessful()
+
+            return result
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to get trigger Ids from event from database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return result
+    }
+
 
     //Update Functions
     fun updateEvent(weatherHookEvent: WeatherHookEvent):Boolean{
@@ -272,15 +321,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
         db.beginTransaction()
         try {
-            var query = "UPDATE $TABLE_WEATHER_HOOK_EVENTS SET $ACTIVE = ${weatherHookEvent.active}, $TITLE = \"${weatherHookEvent.title}\", $TIME_TO_EVENT = ${weatherHookEvent.timeToEvent}, $RELEVANT_DAYS = \"${weatherHookEvent.relevantDays}\" WHERE $EVENT_ID = ${weatherHookEvent.eventId};"
-
-            query += "UPDATE $TABLE_LOCATIONS SET $LONGITUDE = ${weatherHookEvent.location.first}, $LATITUDE = ${weatherHookEvent.location.second} WHERE $EVENT_ID = ${weatherHookEvent.eventId};"
-
-            //TODO: What if new trigger was added? Update wouldn´t work
-            for (trigger in weatherHookEvent.triggers){
-                query += "UPDATE $TABLE_TRIGGERS SET $PHENOMENON = ${trigger.weatherPhenomenon}, $CORRESPONDING_INTENSITY = ${trigger.correspondingIntensity}, $CHECK_MORE_THAN = ${trigger.checkMoreThan} WHERE $EVENT_ID = ${weatherHookEvent.eventId};"
-            }
-
+            val query = "UPDATE $TABLE_WEATHER_HOOK_EVENTS SET $ACTIVE = ${weatherHookEvent.active}, $TITLE = \"${weatherHookEvent.title}\", $TIME_TO_EVENT = ${weatherHookEvent.timeToEvent}, $RELEVANT_DAYS = \"${weatherHookEvent.relevantDays}\" WHERE $EVENT_ID = ${weatherHookEvent.eventId};"
 
             db.execSQL(query)
             db.setTransactionSuccessful()
@@ -288,6 +329,69 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             return true
         } catch (e: Exception) {
             Log.e("DbHelper", "Error while trying to update event in database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
+
+    fun updateLocationWithId(location:Pair<Float,Float>,eventId: Int):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+        try {
+            val query = "UPDATE $TABLE_LOCATIONS SET $LATITUDE = ${location.first}, $LONGITUDE = ${location.second} WHERE $EVENT_KEY = ${eventId};"
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to update event location in database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
+
+    fun updateTriggerWithId(trigger: Weather, triggerId: Int):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+        try {
+            val query = "UPDATE $TABLE_TRIGGERS SET $PHENOMENON = ${trigger.weatherPhenomenon}, $CORRESPONDING_INTENSITY = ${trigger.correspondingIntensity}, $CHECK_MORE_THAN = ${trigger.checkMoreThan} WHERE $TRIGGER_ID = $triggerId;"
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to update event trigger in database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
+
+
+    //DELETE Functions
+
+    fun deleteTriggerWithId(triggerId: Int):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+        try {
+            val query = "DELETE FROM $TABLE_TRIGGERS WHERE $TRIGGER_ID = $triggerId;"
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to delete event trigger in database")
             Log.e("DbHelper",e.message!!)
         } finally {
             db.endTransaction()

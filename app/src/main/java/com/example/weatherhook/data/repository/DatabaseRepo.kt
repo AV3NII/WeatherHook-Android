@@ -13,6 +13,7 @@ class DatabaseRepo() {
         val newId = db.getLastIdFromEventsTable()
 
         val didAddTriggers = db.addTriggers(weatherHookEvent.triggers,newId)
+
         val didAddLocation = db.addLocation(weatherHookEvent.location,newId)
 
         return if(didAddEvent && didAddLocation && didAddTriggers){
@@ -27,6 +28,7 @@ class DatabaseRepo() {
     fun getAllEvents(db: SQLiteHelper):WeatherHookEventList{
         val weatherHookEventList = db.getEvents()
         for (event in weatherHookEventList.events){
+            event.timeToEvent += 1
             event.location = db.getLocationWithId(event.eventId)
             event.triggers = db.getAllTriggersWithId(event.eventId)
         }
@@ -35,10 +37,39 @@ class DatabaseRepo() {
 
     fun updateEvent(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLiteHelper):Boolean{
         val didUpdateEvent = db.updateEvent(weatherHookEvent)
+        val didUpdateLocation = db.updateLocationWithId(weatherHookEvent.location, weatherHookEvent.eventId)
+        var didUpdateTriggers = true
 
-        return if (didUpdateEvent) true
+        val storedTriggerIdsWithId = db.getIdsFromTriggersWithEventId(weatherHookEvent.eventId)
+
+        //checks all conditions for adding updating and deleting inorder to portray the new trigger state in the db
+
+        if (storedTriggerIdsWithId.size == weatherHookEvent.triggers.size){
+            for ((index, trigger) in weatherHookEvent.triggers.withIndex()){
+                didUpdateTriggers = didUpdateTriggers and db.updateTriggerWithId(trigger,storedTriggerIdsWithId[index])
+            }
+        }else if (storedTriggerIdsWithId.size < weatherHookEvent.triggers.size){
+            storedTriggerIdsWithId.forEachIndexed { index, storedID ->
+                didUpdateTriggers = didUpdateTriggers and db.updateTriggerWithId(weatherHookEvent.triggers[index],storedID)
+            }
+
+            for (index in (storedTriggerIdsWithId.size) until (weatherHookEvent.triggers.size )){
+                didUpdateTriggers = didUpdateTriggers and db.addTrigger(weatherHookEvent.triggers[index], weatherHookEvent.eventId)
+            }
+
+        }else{
+            weatherHookEvent.triggers.forEachIndexed { index, trigger ->
+                didUpdateTriggers = didUpdateTriggers and db.updateTriggerWithId(trigger,storedTriggerIdsWithId[index])
+            }
+
+            for (index in (weatherHookEvent.triggers.size ) until (storedTriggerIdsWithId.size)){
+                didUpdateTriggers = didUpdateTriggers and db.deleteTriggerWithId(storedTriggerIdsWithId[index])
+            }
+        }
+
+        return if (didUpdateEvent && didUpdateLocation && didUpdateTriggers) true
         else{
-            Toast.makeText(context,"Error trying to update event in DB",Toast.LENGTH_LONG).show()
+            Toast.makeText(context,"Error trying to update event info in DB",Toast.LENGTH_LONG).show()
             false
         }
     }

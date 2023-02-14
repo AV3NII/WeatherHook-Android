@@ -167,7 +167,7 @@ fun HookInformation(weatherHookEvent: WeatherHookEvent, context:Context, db: SQL
         Row(modifier = Modifier.fillMaxHeight(.90f)) {
             Column(modifier = Modifier
                 .verticalScroll(rememberScrollState())) {
-                pos = MapsHook(posLat = 52.520008, posLong = 13.404954)
+                pos = MapsHook(posLat = weatherHookEvent.location.first.toDouble(), posLong = weatherHookEvent.location.second.toDouble())
                 Spacer(modifier = Modifier.height(15.dp))
                 name = HookName(weatherHookEvent.title)
                 timeToEvent = TimeToEvent(weatherHookEvent.timeToEvent)
@@ -181,7 +181,6 @@ fun HookInformation(weatherHookEvent: WeatherHookEvent, context:Context, db: SQL
                 weatherHookEvent.timeToEvent = timeToEvent
                 weatherHookEvent.relevantDays = relevantDays
                 weatherHookEvent.triggers = triggers
-
         SaveAndDelete(weatherHookEvent,context,db)
     }
 
