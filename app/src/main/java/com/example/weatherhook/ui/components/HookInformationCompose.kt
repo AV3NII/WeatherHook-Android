@@ -117,19 +117,23 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
             Button(
                 onClick = {
                     val intent = Intent(context, MainActivity::class.java)
-                    if (weatherHookEvent.eventId == -2) {
-                        context.startActivity(intent)
-                    }else if (weatherHookEvent.eventId == -1){
-                        Toast.makeText(context,"Something went wrong (ID = -1)",Toast.LENGTH_LONG).show()
-                        context.startActivity(intent)
-                    }else{
-                        DatabaseRepo()
-                            .deleteEventWithId(
-                                weatherHookEvent.eventId,
-                                context,
-                                db
-                            )
-                        context.startActivity(intent)
+                    when (weatherHookEvent.eventId) {
+                        -2 -> {
+                            context.startActivity(intent)
+                        }
+                        -1 -> {
+                            Toast.makeText(context,"Something went wrong (ID = -1)",Toast.LENGTH_LONG).show()
+                            context.startActivity(intent)
+                        }
+                        else -> {
+                            DatabaseRepo()
+                                .deleteEventWithId(
+                                    weatherHookEvent.eventId,
+                                    context,
+                                    db
+                                )
+                            context.startActivity(intent)
+                        }
                     }
                 }, modifier = Modifier.width(150.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(R.color.signal_red))
@@ -139,22 +143,26 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
 
             Button(
                 onClick = {
-                    if (weatherHookEvent.eventId == -2) {
-                        DatabaseRepo()
-                            .addNewWeatherHookToDb(
-                                weatherHookEvent,
-                                context,
-                                db
-                            )
-                    }else if (weatherHookEvent.eventId == -1){
-                        Toast.makeText(context,"Something went wrong (ID = -1)",Toast.LENGTH_LONG).show()
-                    }else{
-                        DatabaseRepo()
-                            .updateEvent(
-                                weatherHookEvent,
-                                context,
-                                db
-                            )
+                    when (weatherHookEvent.eventId) {
+                        -2 -> {
+                            DatabaseRepo()
+                                .addNewWeatherHookToDb(
+                                    weatherHookEvent,
+                                    context,
+                                    db
+                                )
+                        }
+                        -1 -> {
+                            Toast.makeText(context,"Something went wrong (ID = -1)",Toast.LENGTH_LONG).show()
+                        }
+                        else -> {
+                            DatabaseRepo()
+                                .updateEvent(
+                                    weatherHookEvent,
+                                    context,
+                                    db
+                                )
+                        }
                     }
                     val intent = Intent(context, MainActivity::class.java)
                     context.startActivity(intent)
