@@ -74,4 +74,15 @@ class DatabaseRepo() {
         }
     }
 
+    fun deleteEventWithId(eventId:Int,context: Context, db: SQLiteHelper):Boolean{
+        val didDeleteEvent = db.deleteEventWithId(eventId)
+
+        return if(didDeleteEvent){
+            true
+        }else{
+            Toast.makeText(context,"Error trying to delete event from DB",Toast.LENGTH_LONG).show()
+            false
+        }
+    }
+
 }

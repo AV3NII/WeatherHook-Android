@@ -116,7 +116,21 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
         ) {
             Button(
                 onClick = {
-//TODO: Create delete and hook it up
+                    val intent = Intent(context, MainActivity::class.java)
+                    if (weatherHookEvent.eventId == -2) {
+                        context.startActivity(intent)
+                    }else if (weatherHookEvent.eventId == -1){
+                        Toast.makeText(context,"Something went wrong (ID = -1)",Toast.LENGTH_LONG).show()
+                        context.startActivity(intent)
+                    }else{
+                        DatabaseRepo()
+                            .deleteEventWithId(
+                                weatherHookEvent.eventId,
+                                context,
+                                db
+                            )
+                        context.startActivity(intent)
+                    }
                 }, modifier = Modifier.width(150.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(R.color.signal_red))
             ) {

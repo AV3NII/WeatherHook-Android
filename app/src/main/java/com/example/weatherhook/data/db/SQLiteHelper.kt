@@ -399,6 +399,27 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         return false
     }
 
+    fun deleteEventWithId(eventId: Int):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+        try {
+            val query = "DELETE FROM $TABLE_WEATHER_HOOK_EVENTS WHERE $EVENT_ID = $eventId;"
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to delete event in database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
+
+
 }
 
 
