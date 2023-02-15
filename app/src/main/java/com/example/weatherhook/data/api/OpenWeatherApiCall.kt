@@ -16,7 +16,7 @@ fun callForecastApi(lat: Float, lon: Float, cnt: Int, context: Context, callback
 
     // https://api.openweathermap.org/data/2.5/forecast/daily?lat=52.520008&lon=13.404954&cnt=6&appid=blabla
 
-    val baseUrl = "api.openweathermap.org/data/2.5/forecast/daily?"
+    val baseUrl = "https://api.openweathermap.org/data/2.5/forecast/daily?"
     val url = baseUrl + "lat=${lat}&lon=${lon}&cnt=${cnt}&appid=${apiKey}"
 
 
@@ -67,7 +67,7 @@ fun callCurrentApi(lat: Float, lon: Float, context: Context, callback: (CurrentW
 
     // https://api.openweathermap.org/data/2.5/weather?lat=52.520008&lon=13.404954&exclude=hourly&appid=
 
-    val baseUrl = "api.openweathermap.org/data/2.5/weather?"
+    val baseUrl = "https://api.openweathermap.org/data/2.5/weather?"
     val url = baseUrl + "lat=${lat}&lon=${lon}&appid=${apiKey}"
 
 
