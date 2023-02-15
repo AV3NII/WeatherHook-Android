@@ -19,8 +19,8 @@ fun callApi(lat: Float, lon: Float, cnt: Int, context: Context, callback: (ApiDa
 
     // https://api.openweathermap.org/data/2.5/forecast/daily?lat=52.520008&lon=13.404954&exclude=hourly&appid=
 
-    val baseUrl = "https://api.openweathermap.org/data/2.5/forecast/daily?"
-    val url = baseUrl + "lat=${lat}&lon=${lon}&cnt=${cnt}&exclude=hourly&appid=${apiKey}"
+    val baseUrl = "api.openweathermap.org/data/2.5/forecast/daily?"
+    val url = baseUrl + "lat=${lat}&lon=${lon}&cnt=${cnt}&appid=${apiKey}"
 
 
     val queue = Volley.newRequestQueue(context)
