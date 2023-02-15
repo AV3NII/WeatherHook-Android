@@ -2,6 +2,7 @@ package com.example.weatherhook.ui.components
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -143,6 +144,7 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
 
             Button(
                 onClick = {
+                    Log.e("SaveButton", weatherHookEvent.toString())
                     when (weatherHookEvent.eventId) {
                         -2 -> {
                             DatabaseRepo()

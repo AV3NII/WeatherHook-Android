@@ -24,7 +24,7 @@ data class ApiData (
 
 data class City (
     val id: Long,
-    val name: String,
+    var name: String,
     val coord: Coord,
     val country: String,
     val population: Long,
