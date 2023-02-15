@@ -20,11 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
 import com.example.weatherhook.data.api.IconMapper
-import com.example.weatherhook.data.models.ForcastData
+import com.example.weatherhook.data.models.ForecastData
 import java.util.*
+import kotlin.math.roundToInt
 
 @Composable
-fun WeatherForecast(forcastData: ForcastData) {
+fun WeatherForecast(forecastData: ForecastData) {
 
     val mapper = IconMapper()
 
@@ -34,12 +35,11 @@ fun WeatherForecast(forcastData: ForcastData) {
 
     val calendar = Calendar.getInstance()
     val current = calendar.get(Calendar.DAY_OF_WEEK)
-    var currentDayFormatted = 0
-    if (current == 1) currentDayFormatted = 7
-    else currentDayFormatted = current - 1
+    val currentDayFormatted = if (current == 1) 7 else  current - 1
+
 
     fun kelvinToCelsius(kelvin: Float):Float{
-        return String.format("%.1f",(kelvin - 273.15)).toFloat()
+        return ((kelvin - 273.15) * 10f).roundToInt() /10f
     }
 
     Card(elevation = 5.dp, shape = RoundedCornerShape(25.dp), modifier = Modifier
@@ -79,15 +79,15 @@ fun WeatherForecast(forcastData: ForcastData) {
                     }
 
 
-                    Icon(painter = mapper.mapApiIconToProjectIcon(forcastData.data.find { it.weekDay == days[index] }?.icon ?:"error"), tint = colorResource(id = R.color.mid_green), contentDescription = "Icon ${forcastData.data[index].icon}",
+                    Icon(painter = mapper.mapApiIconToProjectIcon(forecastData.data.find { it.weekDay == days[index] }?.icon ?:"error"), tint = colorResource(id = R.color.mid_green), contentDescription = "Icon ${forecastData.data[index].icon}",
                         modifier = Modifier
                             .scale(1f)
                             .padding(top = 5.dp, bottom = 5.dp))
 
-                    Text(text = "${kelvinToCelsius(forcastData.data.find { it.weekDay == days[index] }!!.tempHigh)} °C", textAlign = TextAlign.Center, fontSize = 12.sp,color = colorResource(
+                    Text(text = "${kelvinToCelsius(forecastData.data.find { it.weekDay == days[index] }!!.tempHigh)} °C", textAlign = TextAlign.Center, fontSize = 12.sp,color = colorResource(
                                 id = R.color.dark_green
                             ))
-                    Text(text = "${kelvinToCelsius(forcastData.data.find { it.weekDay == days[index] }!!.tempLow)} °C", textAlign = TextAlign.Center, fontSize = 12.sp ,color = colorResource(
+                    Text(text = "${kelvinToCelsius(forecastData.data.find { it.weekDay == days[index] }!!.tempLow)} °C", textAlign = TextAlign.Center, fontSize = 12.sp ,color = colorResource(
                                 id = R.color.mid_green
                             ))
                 }

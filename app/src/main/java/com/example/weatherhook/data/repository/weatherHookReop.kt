@@ -15,7 +15,9 @@ class WeatherHookRepo {
             gson.fromJson(jsonString, WeatherHookEventList::class.java)
         } catch (e: Exception) {
             Log.e("DataRepository", "Error loading json data", e)
-            return WeatherHookEventList( listOf(WeatherHookEvent(eventId = 0, active = false, title = "Error", location = Pair(0.2f,0.3f), timeToEvent = 2, relevantDays = "MO", triggers = listOf(Weather(weatherPhenomenon = 2, correspondingIntensity = 2f,false)).toMutableList())).toMutableList()
+            return WeatherHookEventList( listOf(WeatherHookEvent(eventId = 0, active = false, title = "Error", location = Pair(0.2f,0.3f), timeToEvent = 2, relevantDays = "MO", triggers = listOf(
+                Weather(weatherPhenomenon = 2, correspondingIntensity = 2f,false)
+            ).toMutableList())).toMutableList()
             )
 
         }

@@ -1,11 +1,13 @@
 package com.example.weatherhook.ui.screens
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.*
@@ -21,18 +23,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import com.example.weatherhook.R
-import com.example.weatherhook.data.repository.WeatherHookRepo
+import com.example.weatherhook.data.db.SQLiteHelper
+import com.example.weatherhook.data.models.WeatherHookEventList
+import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.ui.activities.MainActivity
 
 
 class Settings : Fragment() {
 
     private lateinit var composeView: ComposeView
 
-    val repo: WeatherHookRepo = WeatherHookRepo()
-    val data = repo.loadAllData()
+    val repo = DatabaseRepo()
+    private lateinit var data: WeatherHookEventList
+    private lateinit var db: SQLiteHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        db = SQLiteHelper(requireContext())
+        data = repo.getAllEvents(db)
         arguments?.let {
 
         }
@@ -49,6 +57,8 @@ class Settings : Fragment() {
 
 
 
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
@@ -92,6 +102,7 @@ class Settings : Fragment() {
                     Text(text = "Notifications", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(onClick = {
+                        //TODO: What if lower than Tiramisu (API 33)
                         val i = Intent(Settings.ACTION_ALL_APPS_NOTIFICATION_SETTINGS)
                         context?.startActivity(i)
                     }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(
@@ -99,6 +110,17 @@ class Settings : Fragment() {
                     )
                     ) {
                         Text(text = "Open Notification Settings", color = Color.White)
+                    }
+
+                    Spacer(modifier = Modifier.height(40.dp))
+                    Button(onClick = {
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        requireContext().startActivity(intent)
+                    }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(
+                        R.color.mid_green)
+                    )
+                    ) {
+                        Text(text = "Save Settings", fontWeight = FontWeight.Bold, color = colorResource(id = R.color.black_black))
                     }
                 }
             }

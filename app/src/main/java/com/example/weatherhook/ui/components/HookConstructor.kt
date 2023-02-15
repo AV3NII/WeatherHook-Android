@@ -305,8 +305,8 @@ fun Temperature(temperature: Float,checkMoreThan:Boolean): Pair<String,Boolean> 
         backgroundColor = colorResource(id = R.color.component_background)) {
         Row(modifier = Modifier
             .height(80.dp)
-            .padding(start = 30.dp, end = 30.dp, top = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Icon(painter = painterResource(R.drawable.baseline_whatshot_24), contentDescription = "temp", modifier = Modifier.scale(1.6f), tint = colorResource(id = R.color.dark_green))
+            .padding(start = 30.dp, end = 30.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Icon(painter = painterResource(R.drawable.baseline_whatshot_24), contentDescription = "temp", modifier = Modifier.scale(1.3f), tint = colorResource(id = R.color.dark_green))
             Spacer(modifier = Modifier.width(130.dp))
             if (_checkMoreThan){
                 IconButton(onClick = { _checkMoreThan = false}) {
@@ -369,7 +369,7 @@ fun Temperature(temperature: Float,checkMoreThan:Boolean): Pair<String,Boolean> 
             Text(text = "°C", fontSize = 20.sp)
         }
     }
-    if (currentText != "" || currentText !=null) {
+    if (currentText != "") {
         return Pair<String,Boolean>(currentText,_checkMoreThan)
     }
     else return Pair<String,Boolean>("0",_checkMoreThan)
