@@ -76,8 +76,10 @@ class DatabaseRepo() {
 
     fun deleteEventWithId(eventId:Int,context: Context, db: SQLiteHelper):Boolean{
         val didDeleteEvent = db.deleteEventWithId(eventId)
+        val didDeleteLocation = db.deleteLocationWithId(eventId)
+        val didDeleteTriggers = db.deleteTriggersWithId(eventId)
 
-        return if(didDeleteEvent){
+        return if(didDeleteEvent && didDeleteLocation && didDeleteTriggers){
             true
         }else{
             Toast.makeText(context,"Error trying to delete event from DB",Toast.LENGTH_LONG).show()

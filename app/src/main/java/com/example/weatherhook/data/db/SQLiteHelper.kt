@@ -399,6 +399,26 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         return false
     }
 
+    fun deleteTriggersWithId(eventId: Int):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+        try {
+            val query = "DELETE FROM $TABLE_TRIGGERS WHERE $EVENT_KEY = $eventId;"
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to delete Triggers in database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
+
     fun deleteEventWithId(eventId: Int):Boolean{
         val db = writableDatabase
 
@@ -418,6 +438,29 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         }
         return false
     }
+
+    fun deleteLocationWithId(eventId: Int):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+        try {
+            val query = "DELETE FROM $TABLE_LOCATIONS WHERE $EVENT_KEY = $eventId;"
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to delete location in database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
+
+
+
 
 
 }
