@@ -87,7 +87,6 @@ fun Weekdays(daysList: List<String>, size: Int, clickable: Boolean):List<String>
                                 Modifier.background(backgroundActivated)
                             else Modifier.background(background)
                         )
-
                 ){
 
                     if (_daysList.value.contains(day)) colorColor = textColorActivated

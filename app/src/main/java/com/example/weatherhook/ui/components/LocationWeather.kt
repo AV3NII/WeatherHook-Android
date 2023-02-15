@@ -44,7 +44,7 @@ fun LocationWeather(context: Context, weatherPhenomenon: Int, weatherTemp: Int) 
             Text(locationName, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.black_green))
             Row() {
                 Icon(painter = icon[weatherPhenomenon], contentDescription = "", tint = colorResource(R.color.black_green))
-                Text(" $weatherTemp°C", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.black_green))
+                Text(" 2-$weatherTemp°C", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = colorResource(R.color.black_green))
             }
             Spacer(modifier = Modifier.width(5.dp))
 

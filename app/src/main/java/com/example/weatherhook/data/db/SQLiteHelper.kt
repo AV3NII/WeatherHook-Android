@@ -424,7 +424,10 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
         db.beginTransaction()
         try {
-            val query = "DELETE FROM $TABLE_WEATHER_HOOK_EVENTS WHERE $EVENT_ID = $eventId;"
+            var query = "DELETE FROM $TABLE_WEATHER_HOOK_EVENTS WHERE $EVENT_ID = $eventId;"
+
+            query += "DELETE FROM $TABLE_LOCATIONS WHERE $EVENT_KEY = $eventId;"
+            query += "DELETE FROM $TABLE_TRIGGERS WHERE $EVENT_KEY = $eventId;"
 
             db.execSQL(query)
             db.setTransactionSuccessful()
