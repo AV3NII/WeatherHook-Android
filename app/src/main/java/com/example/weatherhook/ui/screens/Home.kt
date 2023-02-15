@@ -14,7 +14,7 @@ import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.ForecastData
 import com.example.weatherhook.data.models.ForecastDay
 import com.example.weatherhook.data.models.WeatherHookEventList
-import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.data.repository.EventRepo
 import com.example.weatherhook.ui.components.LocationWeather
 import com.example.weatherhook.ui.components.WeatherEventList
 import com.example.weatherhook.ui.components.WeatherForecast
@@ -24,7 +24,7 @@ class Home : Fragment() {
 
     private lateinit var composeView: ComposeView
 
-    val repo= DatabaseRepo()
+    val repo= EventRepo()
     lateinit var data:WeatherHookEventList
 
     lateinit var db: SQLiteHelper
@@ -57,7 +57,7 @@ class Home : Fragment() {
             ForecastDay("FR","11n", 273.64f, 275.15f),
             ForecastDay("SA","13n", 273.64f, 275.15f),
             ForecastDay("SU","error", 273.64f, 275.15f),
-        )
+        ).toMutableList()
     )
 
 

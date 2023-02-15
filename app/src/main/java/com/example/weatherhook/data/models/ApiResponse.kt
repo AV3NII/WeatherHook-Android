@@ -3,7 +3,7 @@ package com.example.weatherhook.data.models
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
-
+//Forecast Data Classes
 data class ApiData (
     val city: City,
     val cod: String,
@@ -11,14 +11,9 @@ data class ApiData (
     val cnt: Long,
     val list: List<ListElement>
 ) {
-    fun toJson(): String {
-        return Gson().toJson(this)
-    }
 
-    companion object {
-        fun fromJson(json: String): ApiData {
-            return Gson().fromJson(json, ApiData::class.java)
-        }
+    fun fromJson(json: String): ApiData {
+        return Gson().fromJson(json, ApiData::class.java)
     }
 }
 
@@ -79,3 +74,76 @@ data class ApiWeather (
     val description: String,
     val icon: String
 )
+
+
+
+
+
+
+
+
+
+//Current Data Classes
+
+data class CurrentWeather (
+    val coord: Coord,
+    val weather: List<ApiWeather>,
+    var base: String,
+    val main: Main,
+    val visibility: Long,
+    val wind: Wind,
+    val clouds: Clouds,
+    val dt: Long,
+    val sys: Sys,
+    val timezone: Long,
+    val id: Long,
+    val name: String,
+    val cod: Long
+) {
+    fun fromJson(json: String): CurrentWeather {
+        return Gson().fromJson(json, CurrentWeather::class.java)
+    }
+}
+
+data class Clouds (
+    val all: Long
+)
+
+
+data class Main (
+    val temp: Double,
+
+    @SerializedName("feels_like")
+    val feelsLike: Double,
+
+    @SerializedName("temp_min")
+    val tempMin: Double,
+
+    @SerializedName("temp_max")
+    val tempMax: Double,
+
+    val pressure: Long,
+    val humidity: Long,
+
+    @SerializedName("sea_level")
+    val seaLevel: Long,
+
+    @SerializedName("grnd_level")
+    val grndLevel: Long
+)
+
+data class Sys (
+    val type: Long,
+    val id: Long,
+    val country: String,
+    val sunrise: Long,
+    val sunset: Long
+)
+
+
+data class Wind (
+    val speed: Double,
+    val deg: Long,
+    val gust: Double
+)
+

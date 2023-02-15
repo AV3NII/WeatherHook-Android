@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.models.WeatherHookEvent
-import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.data.repository.EventRepo
 import com.example.weatherhook.ui.activities.HookActivity
 import com.example.weatherhook.ui.components.HookInformation
 
@@ -19,7 +19,7 @@ class Hook : Fragment() {
     private lateinit var composeView: ComposeView
 
     //to be deleted
-    private var repo = DatabaseRepo()
+    private var repo = EventRepo()
     private lateinit var data:WeatherHookEvent
 
     private lateinit var db:SQLiteHelper

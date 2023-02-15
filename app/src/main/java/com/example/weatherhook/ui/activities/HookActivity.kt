@@ -6,11 +6,11 @@ import com.example.weatherhook.R
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.models.WeatherHookEvent
-import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.data.repository.EventRepo
 
 class HookActivity : AppCompatActivity() {
 
-    private var repo = DatabaseRepo()
+    private var repo = EventRepo()
     private lateinit var data:WeatherHookEvent
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

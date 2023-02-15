@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.example.weatherhook.R
-import com.example.weatherhook.data.api.callApi
+import com.example.weatherhook.data.api.callForecastApi
 
 
 const val notificationID = 1
@@ -27,7 +27,7 @@ class NotificationBroadcast : BroadcastReceiver() {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(notificationID, notification)
 
-        callApi(48.208f,12.122f,7, context) { result ->
+        callForecastApi(48.208f,12.122f,7, context) { result ->
             if (result.cod == "200") {
                 val test = result.toString()
             } else {
