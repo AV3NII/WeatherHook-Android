@@ -46,9 +46,9 @@ class LocationService {
             if (addresses!!.isNotEmpty()) {
                 addresses[0].locality
             } else {
-                "Unknown Location"
+                "Berlin"
             }
-        } ?: "Unknown Location"
+        } ?: "Berlin"
         return locationName
     }
 
