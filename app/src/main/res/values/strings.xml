@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Weather Hook</string>
+
+    <!-- NavBar fragment                                -->
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <!-- NavBar fragment end                            -->
+
+    <!-- Settings View                                  -->
+    <string name="language_text">Language</string>
+    <!-- Settings View end                              -->
+
+    <string name="title_activity_maps">MapsActivity</string>
+
+    <!-- Week fragment                                  -->
+    <string name="MO">MO</string>
+    <string name="TU">TU</string>
+    <string name="WE">WE</string>
+    <string name="TH">TH</string>
+    <string name="FR">FR</string>
+    <string name="SA">SA</string>
+    <string name="SU">SU</string>
+
+    <!-- Week fragment end                              -->
 </resources>

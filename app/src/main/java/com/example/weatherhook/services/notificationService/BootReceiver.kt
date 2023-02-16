@@ -1,0 +1,46 @@
+package com.example.weatherhook.services.notificationService
+
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.util.Log
+import com.example.weatherhook.data.api.Api
+import com.example.weatherhook.data.db.SQLiteHelper
+import com.example.weatherhook.data.models.ForecastData
+import com.example.weatherhook.data.models.ForecastDay
+import com.example.weatherhook.data.repository.ForecastRepo
+import com.example.weatherhook.services.locationService.LocationService
+
+class BootReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val repo = ForecastRepo()
+        val db = SQLiteHelper(context)
+        val location = LocationService().getLocationPair(context)
+
+        if (intent.action == "android.intent.action.BOOT_COMPLETED") {
+            if (repo.getForecast(context,db) == ForecastData(listOf<ForecastDay>().toMutableList())){
+                Api().callApi(location.first,location.second,7, context) { forecast ->
+                    if (forecast.cod == "200") {
+                        repo.addForecast(forecast,context, SQLiteHelper(context))
+                        Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
+                    } else {
+                        val test = forecast.city.name
+                        Log.e("shit", test.toString())
+                    }
+                }
+            }else{
+                Api().callApi(location.first,location.second,7, context) { forecast ->
+                    if (forecast.cod == "200") {
+                        repo.updateForecast(forecast,context, SQLiteHelper(context))
+                        Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
+                    } else {
+                        val test = forecast.city.name
+                        Log.e("shit", test.toString())
+                    }
+                }
+            }
+
+
+        }
+    }
+}
