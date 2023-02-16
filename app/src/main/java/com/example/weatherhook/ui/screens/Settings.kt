@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment
 import com.example.weatherhook.R
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.WeatherHookEventList
-import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.data.repository.EventRepo
 import com.example.weatherhook.ui.activities.MainActivity
 
 
@@ -33,7 +33,7 @@ class Settings : Fragment() {
 
     private lateinit var composeView: ComposeView
 
-    val repo = DatabaseRepo()
+    val repo = EventRepo()
     private lateinit var data: WeatherHookEventList
     private lateinit var db: SQLiteHelper
 

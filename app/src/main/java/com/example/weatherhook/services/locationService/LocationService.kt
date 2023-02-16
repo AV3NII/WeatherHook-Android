@@ -1,4 +1,4 @@
-
+package com.example.weatherhook.services.locationService
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager

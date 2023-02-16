@@ -25,7 +25,7 @@ import com.example.weatherhook.R
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.WeatherHookEvent
 import com.example.weatherhook.data.models.WeatherHookEventList
-import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.data.repository.EventRepo
 import com.example.weatherhook.ui.activities.HookActivity
 
 
@@ -91,7 +91,7 @@ fun WeatherHook(event: WeatherHookEvent,context: Context,db:SQLiteHelper) {
                     onCheckedChange = {
                         active.value = it
                         event.active = active.value
-                        DatabaseRepo().updateEvent(event,context,db)
+                        EventRepo().updateEvent(event,context,db)
                     }
                 )
             }

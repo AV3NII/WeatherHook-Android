@@ -4,9 +4,9 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.weatherhook.data.models.Weather
-import com.example.weatherhook.data.models.WeatherHookEvent
-import com.example.weatherhook.data.models.WeatherHookEventList
+import com.example.weatherhook.data.models.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,null, DATABASE_VERSION) {
@@ -21,6 +21,8 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         private const val TABLE_WEATHER_HOOK_EVENTS = "WeatherHookEvents"
         private const val TABLE_LOCATIONS = "TableLocations"
         private const val TABLE_TRIGGERS = "TableTriggers"
+
+        private const val TABLE_FORECAST = "TableForecast"
 
         //Table Weather Hook Events columns
         private const val EVENT_ID = "eventId"
@@ -40,6 +42,14 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         private const val PHENOMENON = "phenomenon"
         private const val CHECK_MORE_THAN = "checkMoreThan"
         private const val CORRESPONDING_INTENSITY = "correspondingIntensity"
+
+
+        //Table forecast columns
+        private const val DAY = "day"
+        private const val ICON = "icon"
+        private const val MIN_TEMP = "minTemp"
+        private const val MAX_TEMP = "maxTemp"
+
 
     }
     override fun onCreate(db: SQLiteDatabase?) {
@@ -66,9 +76,21 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
 
 
+
+        val createTableForecast = "CREATE TABLE $TABLE_FORECAST (" +
+                "$DAY VARCHAR(2) PRIMARY KEY,"+
+                "$ICON VARCHAR(3) NOT NULL,"+
+                "$MIN_TEMP FLOAT NOT NULL,"+
+                "$MAX_TEMP FLOAT NOT NULL"+
+                ")"
+
+
+
         db?.execSQL(createTableWeatherHookEvents)
         db?.execSQL(createTableLocations)
         db?.execSQL(createTableTriggers)
+
+        db?.execSQL(createTableForecast)
 
 
     }
@@ -79,6 +101,8 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             db?.execSQL("DROP TABLE IF EXISTS $TABLE_WEATHER_HOOK_EVENTS")
             db?.execSQL("DROP TABLE IF EXISTS $TABLE_LOCATIONS")
             db?.execSQL("DROP TABLE IF EXISTS $TABLE_TRIGGERS")
+
+            db?.execSQL("DROP TABLE IF EXISTS $TABLE_FORECAST")
             onCreate(db)
         }
     }
@@ -172,6 +196,8 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         }
         return false
     }
+
+
 
 
     //GET Functions
@@ -463,7 +489,99 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
     }
 
 
+    // Forcast Functions
 
+    fun addForecast(apiData: ApiData):Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+
+        try {
+            var query = ""
+
+            apiData.list.forEach { day ->
+                val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
+                val date = Date(day.dt * 1000)
+                val selectedDate = sdf.format(date)
+
+                val a = when (selectedDate){
+                    "Monday" -> "MO"
+                    "Tuesday" -> "TU"
+                    "Wednesday" -> "WE"
+                    "Thursday" -> "TH"
+                    "Friday" -> "FR"
+                    "Saturday" -> "SA"
+                    "Sunday" -> "SU"
+                    else -> ""
+                }
+
+
+                query = "INSERT INTO $TABLE_FORECAST($DAY, $ICON, $MIN_TEMP, $MAX_TEMP) VALUES (\"${a}\", \"${day.weather[0].icon}\", ${day.temp.min}, ${day.temp.max});"
+                db.execSQL(query)
+            }
+
+
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to add Forecast to database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
+
+
+    fun getForecast(): ForecastData {
+        val db = readableDatabase
+
+        val forecast = ForecastData(data = listOf<ForecastDay>().toMutableList())
+        db.beginTransaction()
+
+        try {
+            val query = "SELECT $DAY, $ICON, $MIN_TEMP, $MAX_TEMP FROM $TABLE_FORECAST;"
+            val response = db.rawQuery(query,null)
+            if (response.moveToFirst()){
+                do{
+                    forecast.data.add(ForecastDay(response.getString(0), response.getString(1),response.getFloat(2),response.getFloat(3)))
+                }while(response.moveToNext())
+            }
+            response.close()
+            db.setTransactionSuccessful()
+
+            return forecast
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to add Forecast to database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return forecast
+    }
+
+
+    fun deleteForecast():Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+
+        try {
+            val query = "DELETE FROM $TABLE_FORECAST"
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to delete Forecast from database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
+    }
 
 
 }

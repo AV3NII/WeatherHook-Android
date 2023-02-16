@@ -39,6 +39,7 @@ class Notification(private val context: Context) {
         )
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, (AlarmManager.INTERVAL_HALF_DAY)/4, bootPendingIntent)
 
+
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             time,

@@ -27,7 +27,7 @@ import com.example.weatherhook.R
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.Weather
 import com.example.weatherhook.data.models.WeatherHookEvent
-import com.example.weatherhook.data.repository.DatabaseRepo
+import com.example.weatherhook.data.repository.EventRepo
 import com.example.weatherhook.ui.activities.MainActivity
 
 @Composable
@@ -127,7 +127,7 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
                             context.startActivity(intent)
                         }
                         else -> {
-                            DatabaseRepo()
+                            EventRepo()
                                 .deleteEventWithId(
                                     weatherHookEvent.eventId,
                                     context,
@@ -147,7 +147,7 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
                     Log.e("SaveButton", weatherHookEvent.toString())
                     when (weatherHookEvent.eventId) {
                         -2 -> {
-                            DatabaseRepo()
+                            EventRepo()
                                 .addNewWeatherHookToDb(
                                     weatherHookEvent,
                                     context,
@@ -158,7 +158,7 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
                             Toast.makeText(context,"Something went wrong (ID = -1)",Toast.LENGTH_LONG).show()
                         }
                         else -> {
-                            DatabaseRepo()
+                            EventRepo()
                                 .updateEvent(
                                     weatherHookEvent,
                                     context,

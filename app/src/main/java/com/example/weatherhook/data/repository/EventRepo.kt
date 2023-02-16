@@ -6,7 +6,7 @@ import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.WeatherHookEvent
 import com.example.weatherhook.data.models.WeatherHookEventList
 
-class DatabaseRepo() {
+class EventRepo() {
     fun addNewWeatherHookToDb(weatherHookEvent: WeatherHookEvent,context: Context,db:SQLiteHelper):Boolean{
         val didAddEvent = db.addEvent(weatherHookEvent)
 

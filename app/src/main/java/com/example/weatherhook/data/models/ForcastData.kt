@@ -7,5 +7,5 @@ data class ForecastDay (
     val tempHigh: Float,
 )
 data class ForecastData(
-    val data: List<ForecastDay>
+    val data: MutableList<ForecastDay>
 )
