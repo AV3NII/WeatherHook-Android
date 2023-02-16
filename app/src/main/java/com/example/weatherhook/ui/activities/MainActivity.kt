@@ -6,13 +6,21 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.weatherhook.data.api.Api
+import com.example.weatherhook.data.db.SQLiteHelper
+import com.example.weatherhook.data.models.ForecastData
+import com.example.weatherhook.data.models.ForecastDay
+import com.example.weatherhook.data.repository.ForecastRepo
 import com.example.weatherhook.databinding.ActivityMainBinding
+import com.example.weatherhook.services.locationService.LocationService
 import com.example.weatherhook.services.notificationService.*
+import com.example.weatherhook.services.notificationService.Notification
 import com.google.android.gms.location.*
 import java.util.*
 
@@ -21,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val PERMISSIONS_REQUEST_CODE = 123
 
+    val repo = ForecastRepo()
+    val db = SQLiteHelper(this)
 
 
     override fun onRequestPermissionsResult(
@@ -67,14 +77,30 @@ class MainActivity : AppCompatActivity() {
         action!!.title = "Weather Hook Home"
 
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
 
 
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O) { createNotificationChannel() }
 
+        val location = LocationService().getLocationPair(this)
 
+        if (repo.getForecast(this,db) == ForecastData(listOf<ForecastDay>().toMutableList())){
+            Api().callApi(location.first,location.second,7, this) { forecast ->
+                if (forecast.cod == "200") {
+                    repo.addForecast(forecast,this, SQLiteHelper(this))
+                    Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].deg).toInt()-273.15} °C")
+                } else {
+                    val test = forecast.city.name
+                    Log.e("shit", test.toString())
+                }
+            }
+        }
+
+
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
 

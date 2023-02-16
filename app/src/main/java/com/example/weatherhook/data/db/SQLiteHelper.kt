@@ -200,28 +200,6 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
 
 
-    fun deleteForecast():Boolean{
-        val db = writableDatabase
-
-        db.beginTransaction()
-
-        try {
-            val query = "DELETE FROM $TABLE_FORECAST"
-
-            db.execSQL(query)
-            db.setTransactionSuccessful()
-
-            return true
-        } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to delete Forecast from database")
-            Log.e("DbHelper",e.message!!)
-        } finally {
-            db.endTransaction()
-        }
-        return false
-    }
-
-
     //GET Functions
 
 
@@ -538,11 +516,11 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
                 }
 
 
-                query += "INSERT INTO $TABLE_FORECAST($DAY, $ICON, $MIN_TEMP, $MAX_TEMP) VALUES (${a}, ${day.weather[0].icon}, ${day.temp.min}, ${day.temp.max});"
-
+                query = "INSERT INTO $TABLE_FORECAST($DAY, $ICON, $MIN_TEMP, $MAX_TEMP) VALUES (\"${a}\", \"${day.weather[0].icon}\", ${day.temp.min}, ${day.temp.max});"
+                db.execSQL(query)
             }
 
-            db.execSQL(query)
+
             db.setTransactionSuccessful()
 
             return true
@@ -555,40 +533,6 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         return false
     }
 
-    fun addCurrentWeather(currentWeather: CurrentWeather):Boolean{
-        val db = writableDatabase
-
-        db.beginTransaction()
-
-        try {
-            val calendar = Calendar.getInstance()
-            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-
-            val today = when (dayOfWeek) {
-                Calendar.SUNDAY -> "SU"
-                Calendar.MONDAY -> "MO"
-                Calendar.TUESDAY -> "TU"
-                Calendar.WEDNESDAY -> "WE"
-                Calendar.THURSDAY -> "TH"
-                Calendar.FRIDAY -> "FR"
-                Calendar.SATURDAY -> "SA"
-                else -> ""
-            }
-
-            val query = "INSERT INTO $TABLE_FORECAST($DAY, $ICON, $MIN_TEMP, $MAX_TEMP) VALUES (${today}, ${currentWeather.weather[0].icon}, ${currentWeather.main.tempMin}, ${currentWeather.main.tempMax});"
-
-            db.execSQL(query)
-            db.setTransactionSuccessful()
-
-            return true
-        } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to add Forecast to database")
-            Log.e("DbHelper",e.message!!)
-        } finally {
-            db.endTransaction()
-        }
-        return false
-    }
 
     fun getForecast(): ForecastData {
         val db = readableDatabase
@@ -601,10 +545,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             val response = db.rawQuery(query,null)
             if (response.moveToFirst()){
                 do{
-                    val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
-                    val date = Date(response.getInt(0).toLong() * 1000)
-
-                    forecast.data.add(ForecastDay(sdf.format(date), response.getString(1),response.getFloat(2),response.getFloat(3)))
+                    forecast.data.add(ForecastDay(response.getString(0), response.getString(1),response.getFloat(2),response.getFloat(3)))
                 }while(response.moveToNext())
             }
             response.close()
@@ -618,6 +559,28 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             db.endTransaction()
         }
         return forecast
+    }
+
+
+    fun deleteForecast():Boolean{
+        val db = writableDatabase
+
+        db.beginTransaction()
+
+        try {
+            val query = "DELETE FROM $TABLE_FORECAST"
+
+            db.execSQL(query)
+            db.setTransactionSuccessful()
+
+            return true
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to delete Forecast from database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return false
     }
 
 
