@@ -8,8 +8,8 @@ import com.example.weatherhook.data.models.ForecastData
 
 class ForecastRepo() {
 
-    fun addForecast(apiData: ApiData, context: Context, db: SQLiteHelper):Boolean{
-        val didAddForecast = db.addForecast(apiData)
+    fun addForecast(apiData: ApiData,location:String, context: Context, db: SQLiteHelper):Boolean{
+        val didAddForecast = db.addForecast(apiData,location)
 
         return if(didAddForecast ){
             true
@@ -19,11 +19,11 @@ class ForecastRepo() {
         }
     }
 
-    fun updateForecast(apiData: ApiData, context: Context, db: SQLiteHelper):Boolean{
+    fun updateForecast(apiData: ApiData,location:String, context: Context, db: SQLiteHelper):Boolean{
         val didDelete = db.deleteForecast()
 
         return if(didDelete){
-            return addForecast(apiData,context,db)
+            return addForecast(apiData,location,context,db)
 
         }else{
             Toast.makeText(context,"Error trying to remove forecast from DB", Toast.LENGTH_LONG).show()

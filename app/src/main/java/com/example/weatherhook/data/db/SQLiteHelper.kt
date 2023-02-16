@@ -49,31 +49,32 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         private const val ICON = "icon"
         private const val MIN_TEMP = "minTemp"
         private const val MAX_TEMP = "maxTemp"
+        private const val LOCATION_NAME = "locationName"
 
 
     }
     override fun onCreate(db: SQLiteDatabase?) {
         val createTableWeatherHookEvents = "CREATE TABLE $TABLE_WEATHER_HOOK_EVENTS (" +
-            "$EVENT_ID INTEGER PRIMARY KEY ,"+
-            "$ACTIVE BOOL NOT NULL,"+
-            "$TITLE VARCHAR(20) NOT NULL,"+
-            "$TIME_TO_EVENT INT NOT NULL,"+
-            "$RELEVANT_DAYS VARCHAR(20) NOT NULL)"
+                "$EVENT_ID INTEGER PRIMARY KEY ,"+
+                "$ACTIVE BOOL NOT NULL,"+
+                "$TITLE VARCHAR(20) NOT NULL,"+
+                "$TIME_TO_EVENT INT NOT NULL,"+
+                "$RELEVANT_DAYS VARCHAR(20) NOT NULL)"
 
         val createTableTriggers = "CREATE TABLE $TABLE_TRIGGERS (" +
-            "$TRIGGER_ID INTEGER NOT NULL PRIMARY KEY,"+
-            "$PHENOMENON INTEGER NOT NULL,"+
-            "$CORRESPONDING_INTENSITY FLOAT NOT NULL,"+
-            "$CHECK_MORE_THAN BOOL NOT NULL,"+
-            "$EVENT_KEY INTEGER NOT NULL,"+
-            "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
+                "$TRIGGER_ID INTEGER NOT NULL PRIMARY KEY,"+
+                "$PHENOMENON INTEGER NOT NULL,"+
+                "$CORRESPONDING_INTENSITY FLOAT NOT NULL,"+
+                "$CHECK_MORE_THAN BOOL NOT NULL,"+
+                "$EVENT_KEY INTEGER NOT NULL,"+
+                "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
 
         val createTableLocations = "CREATE TABLE $TABLE_LOCATIONS (" +
-            "$LOCATION_ID INTEGER PRIMARY KEY ,"+
-            "$LATITUDE FLOAT NOT NULL,"+
-            "$LONGITUDE FLOAT NOT NULL,"+
-            "$EVENT_KEY INTEGER UNIQUE NOT NULL,"+
-            "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
+                "$LOCATION_ID INTEGER PRIMARY KEY ,"+
+                "$LATITUDE FLOAT NOT NULL,"+
+                "$LONGITUDE FLOAT NOT NULL,"+
+                "$EVENT_KEY INTEGER UNIQUE NOT NULL,"+
+                "FOREIGN KEY ($EVENT_KEY) REFERENCES $TABLE_WEATHER_HOOK_EVENTS($EVENT_ID))"
 
 
 
@@ -81,7 +82,8 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
                 "$DAY VARCHAR(2) PRIMARY KEY,"+
                 "$ICON VARCHAR(3) NOT NULL,"+
                 "$MIN_TEMP FLOAT NOT NULL,"+
-                "$MAX_TEMP FLOAT NOT NULL"+
+                "$MAX_TEMP FLOAT NOT NULL,"+
+                "$LOCATION_NAME VARCHAR(50) NOT NULL"+
                 ")"
 
 
@@ -491,7 +493,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
     // Forcast Functions
 
-    fun addForecast(apiData: ApiData):Boolean{
+    fun addForecast(apiData: ApiData,location:String):Boolean{
         val db = writableDatabase
 
         db.beginTransaction()
@@ -516,7 +518,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
                 }
 
 
-                query = "INSERT INTO $TABLE_FORECAST($DAY, $ICON, $MIN_TEMP, $MAX_TEMP) VALUES (\"${a}\", \"${day.weather[0].icon}\", ${day.temp.min}, ${day.temp.max});"
+                query = "INSERT INTO $TABLE_FORECAST($DAY, $ICON, $MIN_TEMP, $MAX_TEMP, $LOCATION_NAME) VALUES (\"${a}\", \"${day.weather[0].icon}\", ${day.temp.min}, ${day.temp.max}, \"${location}\");"
                 db.execSQL(query)
             }
 
@@ -541,11 +543,11 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         db.beginTransaction()
 
         try {
-            val query = "SELECT $DAY, $ICON, $MIN_TEMP, $MAX_TEMP FROM $TABLE_FORECAST;"
+            val query = "SELECT $DAY, $ICON, $MIN_TEMP, $MAX_TEMP, $LOCATION_NAME FROM $TABLE_FORECAST;"
             val response = db.rawQuery(query,null)
             if (response.moveToFirst()){
                 do{
-                    forecast.data.add(ForecastDay(response.getString(0), response.getString(1),response.getFloat(2),response.getFloat(3)))
+                    forecast.data.add(ForecastDay(response.getString(0), response.getString(1),response.getFloat(2),response.getFloat(3), response.getString(4)))
                 }while(response.moveToNext())
             }
             response.close()
