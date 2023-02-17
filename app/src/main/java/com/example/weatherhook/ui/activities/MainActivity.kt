@@ -107,6 +107,7 @@ class MainActivity : AppCompatActivity() {
         Log.e("shit", "new Name $location")
 
 
+
         if (forecastRepo.getForecast(db) == ForecastData(listOf<ForecastDay>().toMutableList())){
             Log.e("shit", "First start fetch")
             Api().callApi(location.first,location.second,7, this) { forecast ->
@@ -142,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                         val test = forecast.city.name
                         binding = ActivityMainBinding.inflate(layoutInflater)
                         setContentView(binding.root)
-                        Log.e("shit", test.toString())
+                        Log.e("shit", test)
                     }
                 }
             }

@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Notification(private val context: Context) {
+
     fun scheduleNotification(title: String, message: String) {
         val intent = Intent(context, NotificationBroadcast::class.java)
 
@@ -41,19 +42,26 @@ class Notification(private val context: Context) {
         )
 
 
-/*  Send an Alarm right away at phone restart
+//  Send an Alarm right away at phone restart
+
+
+
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             time,
             bootPendingIntent
         )
 
- */
+
+
+
         // Set an alarmManager at phone restart -> each 3 hours
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, (AlarmManager.INTERVAL_HALF_DAY)/4, bootPendingIntent)
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 6000, bootPendingIntent)
+
 
         // Set an alarmManager at app start -> each 3 hours
-        alarmManager2.setRepeating(AlarmManager.RTC_WAKEUP, time, (AlarmManager.INTERVAL_HALF_DAY)/4, pendingIntent)
+        //TODO: this doesn´t work
+        alarmManager2.setRepeating(AlarmManager.RTC_WAKEUP, time, 6000, pendingIntent)
 
 
     }

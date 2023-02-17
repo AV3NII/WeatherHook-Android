@@ -9,6 +9,7 @@ import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.ForecastData
 import com.example.weatherhook.data.models.ForecastDay
 import com.example.weatherhook.data.repository.ForecastRepo
+import com.example.weatherhook.services.compareService.HookChecker
 import com.example.weatherhook.services.locationService.LocationService
 
 class BootReceiver : BroadcastReceiver() {
@@ -24,7 +25,7 @@ class BootReceiver : BroadcastReceiver() {
                 Api().callApi(location.first,location.second,7, context) { forecast ->
                     if (forecast.cod == "200") {
                         repo.addForecast(forecast, locationName, context, SQLiteHelper(context))
-                        Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
+                        //Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
                     } else {
                         val test = forecast.city.name
                         Log.e("shit", test.toString())
@@ -34,7 +35,7 @@ class BootReceiver : BroadcastReceiver() {
                 Api().callApi(location.first,location.second,7, context) { forecast ->
                     if (forecast.cod == "200") {
                         repo.updateForecast(forecast, locationName, context, SQLiteHelper(context))
-                        Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
+                        //Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
                     } else {
                         val test = forecast.city.name
                         Log.e("shit", test.toString())
@@ -44,5 +45,8 @@ class BootReceiver : BroadcastReceiver() {
 
 
         }
+
+        HookChecker(db,context).makeNotification()
+        Notification(context).scheduleNotification("forecast.city.name", "It is ${(5.5).toInt()-273.15} °C")
     }
 }
