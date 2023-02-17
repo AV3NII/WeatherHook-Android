@@ -15,8 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
 import com.example.weatherhook.data.api.IconMapper
+import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.ForecastDay
-import com.example.weatherhook.services.locationService.LocationService
+import com.example.weatherhook.data.repository.ForecastRepo
 import kotlin.math.roundToInt
 
 
@@ -24,7 +25,7 @@ import kotlin.math.roundToInt
 fun LocationWeather(context: Context, forecastDay: ForecastDay) {
 
 
-    val locationName = LocationService().getLocationName(context)
+    val locationName = ForecastRepo().getName(SQLiteHelper(context))
 
     fun kelvinToCelsius(kelvin: Float):Float{
         return ((kelvin - 273.15) * 10f).roundToInt() /10f
