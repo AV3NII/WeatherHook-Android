@@ -41,7 +41,7 @@ class Home : Fragment() {
         db = SQLiteHelper(requireContext())
         data = repo.getAllEvents(db)
 
-        forecast = forecastRepo.getForecast(requireContext(), db)
+        forecast = forecastRepo.getForecast(db)
         Log.e("shit", "Home shit ${forecast.toString()}")
         arguments?.let {
         }

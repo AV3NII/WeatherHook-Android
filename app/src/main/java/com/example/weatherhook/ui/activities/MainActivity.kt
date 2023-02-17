@@ -2,6 +2,7 @@ package com.example.weatherhook.ui.activities
 
 import android.Manifest
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -58,18 +59,33 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Get the shared preferences file
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
 
 
-            if (!checkPermissions()) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf<String>(
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ),
-                    PERMISSIONS_REQUEST_CODE
-                )
-            }
+        // Get the editor for the shared preferences file
+        val editor = sharedPreferences.edit()
+
+
+        // Set a boolean value in the shared preferences file
+        editor.putBoolean("key", true)
+
+
+        // Save the changes to the shared preferences file
+        editor.apply()
+
+
+        if (!checkPermissions()) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf<String>(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ),
+                PERMISSIONS_REQUEST_CODE
+            )
+        }
+
 
 
 
@@ -81,11 +97,21 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O) { createNotificationChannel() }
 
         val location = LocationService().getLocationPair(this)
+        val locationName = LocationService().getLocationName(this, location.first.toDouble(), location.second.toDouble()) ?: "Berlin"
+        val apiLocationName = forecastRepo.getName(db)
 
-        if (forecastRepo.getForecast(this, db) == ForecastData(listOf<ForecastDay>().toMutableList())){
+        val latitude = location.first
+        val longitude = location.second
+
+        Log.e("shit", "new Name $locationName")
+        Log.e("shit", "new Name $location")
+
+
+        if (forecastRepo.getForecast(db) == ForecastData(listOf<ForecastDay>().toMutableList())){
+            Log.e("shit", "First start fetch")
             Api().callApi(location.first,location.second,7, this) { forecast ->
                 if (forecast.cod == "200") {
-                    forecastRepo.addForecast(forecast, this, SQLiteHelper(this))
+                    forecastRepo.addForecast(forecast, locationName, this, SQLiteHelper(this))
                     binding = ActivityMainBinding.inflate(layoutInflater)
                     setContentView(binding.root)
                     Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
@@ -98,23 +124,30 @@ class MainActivity : AppCompatActivity() {
             }
 
         }else{
-            Api().callApi(location.first,location.second,7, this) { forecast ->
-                if (forecast.cod == "200") {
-                    forecastRepo.updateForecast(forecast,this, SQLiteHelper(this))
-                    binding = ActivityMainBinding.inflate(layoutInflater)
-                    setContentView(binding.root)
-                    Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].deg).toInt()-273.15} °C")
-                } else {
-                    val test = forecast.city.name
-                    binding = ActivityMainBinding.inflate(layoutInflater)
-                    setContentView(binding.root)
-                    Log.e("shit", test.toString())
+            if(locationName == apiLocationName) {
+                Log.e("shit", "data from database")
+                Log.e("shit", "Location Name: $locationName")
+                binding = ActivityMainBinding.inflate(layoutInflater)
+                setContentView(binding.root)
+            }
+            else {
+                Log.e("shit", "data from fetch")
+                Api().callApi(location.first, location.second,7, this) { forecast ->
+                    if (forecast.cod == "200") {
+                        forecastRepo.updateForecast(forecast, locationName,this, SQLiteHelper(this))
+                        binding = ActivityMainBinding.inflate(layoutInflater)
+                        setContentView(binding.root)
+                        Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].deg).toInt()-273.15} °C")
+                    } else {
+                        val test = forecast.city.name
+                        binding = ActivityMainBinding.inflate(layoutInflater)
+                        setContentView(binding.root)
+                        Log.e("shit", test.toString())
+                    }
                 }
             }
+
         }
-
-
-
 
 
     }
@@ -151,4 +184,5 @@ class MainActivity : AppCompatActivity() {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
+
 }

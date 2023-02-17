@@ -18,6 +18,8 @@ class Notification(private val context: Context) {
 
         val alarmManager = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
         val time = getTime()
+        val alarmManager2 = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+
 
 
 
@@ -37,17 +39,21 @@ class Notification(private val context: Context) {
             bootIntent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, (AlarmManager.INTERVAL_HALF_DAY)/4, bootPendingIntent)
 
 
+/*  Send an Alarm right away at phone restart
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             time,
             bootPendingIntent
         )
 
+ */
+        // Set an alarmManager at phone restart -> each 3 hours
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, (AlarmManager.INTERVAL_HALF_DAY)/4, bootPendingIntent)
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, (AlarmManager.INTERVAL_HALF_DAY)/4, pendingIntent)
+        // Set an alarmManager at app start -> each 3 hours
+        alarmManager2.setRepeating(AlarmManager.RTC_WAKEUP, time, (AlarmManager.INTERVAL_HALF_DAY)/4, pendingIntent)
 
 
     }

@@ -16,12 +16,14 @@ class BootReceiver : BroadcastReceiver() {
         val repo = ForecastRepo()
         val db = SQLiteHelper(context)
         val location = LocationService().getLocationPair(context)
+        val locationName = LocationService().getName(context, location.first.toDouble(), location.second.toDouble()) ?: "Berlin"
+
 
         if (intent.action == "android.intent.action.BOOT_COMPLETED") {
-            if (repo.getForecast(context,db) == ForecastData(listOf<ForecastDay>().toMutableList())){
+            if (repo.getForecast(db) == ForecastData(listOf<ForecastDay>().toMutableList())){
                 Api().callApi(location.first,location.second,7, context) { forecast ->
                     if (forecast.cod == "200") {
-                        repo.addForecast(forecast,context, SQLiteHelper(context))
+                        repo.addForecast(forecast, locationName, context, SQLiteHelper(context))
                         Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
                     } else {
                         val test = forecast.city.name
@@ -31,7 +33,7 @@ class BootReceiver : BroadcastReceiver() {
             }else{
                 Api().callApi(location.first,location.second,7, context) { forecast ->
                     if (forecast.cod == "200") {
-                        repo.updateForecast(forecast,context, SQLiteHelper(context))
+                        repo.updateForecast(forecast, locationName, context, SQLiteHelper(context))
                         Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
                     } else {
                         val test = forecast.city.name

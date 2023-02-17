@@ -563,6 +563,31 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
         return forecast
     }
 
+    fun getLocation(): String {
+        val db = readableDatabase
+
+        lateinit var name: String
+        db.beginTransaction()
+
+        try {
+            val query = "SELECT $LOCATION_NAME FROM $TABLE_FORECAST;"
+            val response = db.rawQuery(query,null)
+            if (response.moveToFirst()){
+                name = response.getString(0)
+            }
+            response.close()
+            db.setTransactionSuccessful()
+
+            return name
+        } catch (e: Exception) {
+            Log.e("DbHelper", "Error while trying to add Forecast to database")
+            Log.e("DbHelper",e.message!!)
+        } finally {
+            db.endTransaction()
+        }
+        return "Berlin"
+    }
+
 
     fun deleteForecast():Boolean{
         val db = writableDatabase

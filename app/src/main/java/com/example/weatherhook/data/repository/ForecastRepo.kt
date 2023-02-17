@@ -31,8 +31,12 @@ class ForecastRepo() {
         }
     }
 
-    fun getForecast(context: Context, db: SQLiteHelper):ForecastData{
+    fun getForecast(db: SQLiteHelper):ForecastData{
         return db.getForecast()
+    }
+
+    fun getName(db: SQLiteHelper):String{
+        return db.getLocation()
     }
 
 }
