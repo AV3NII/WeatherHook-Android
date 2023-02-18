@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -23,13 +23,10 @@
         android:theme="@style/Theme.WeatherHook"
         tools:targetApi="33">
 
-
-
-        <receiver android:name=".services.notificationService.NotificationBroadcast"
+        <receiver
+            android:name=".services.notificationService.NotificationBroadcast"
             android:exported="true"
-            android:process=":remote">
-        </receiver>
-
+            android:process=":remote" />
         <receiver
             android:name=".services.notificationService.BootReceiver"
             android:enabled="true"
@@ -39,14 +36,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".services.notificationService.BootReceiver2"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
 
 
         <meta-data
@@ -73,14 +62,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+
     </application>
 
 </manifest>

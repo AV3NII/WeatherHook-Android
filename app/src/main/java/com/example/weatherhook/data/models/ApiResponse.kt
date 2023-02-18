@@ -48,8 +48,8 @@ data class ListElement (
     val gust: Double,
     val clouds: Long,
     val pop: Double,
-    val rain: Double? = null,
-    val snow: Double? = null
+    var rain: Double? = null,
+    var snow: Double? = null
 )
 
 data class FeelsLike (
@@ -62,7 +62,7 @@ data class FeelsLike (
 data class Temp (
     val day: Double,
     val min: Double,
-    val max: Double,
+    var max: Double,
     val night: Double,
     val eve: Double,
     val morn: Double
@@ -73,77 +73,5 @@ data class ApiWeather (
     val main: String,
     val description: String,
     val icon: String
-)
-
-
-
-
-
-
-
-
-
-//Current Data Classes
-
-data class CurrentWeather (
-    val coord: Coord,
-    val weather: List<ApiWeather>,
-    var base: String,
-    val main: Main,
-    val visibility: Long,
-    val wind: Wind,
-    val clouds: Clouds,
-    val dt: Long,
-    val sys: Sys,
-    val timezone: Long,
-    val id: Long,
-    val name: String,
-    val cod: Long
-) {
-    fun fromJson(json: String): CurrentWeather {
-        return Gson().fromJson(json, CurrentWeather::class.java)
-    }
-}
-
-data class Clouds (
-    val all: Long
-)
-
-
-data class Main (
-    val temp: Double,
-
-    @SerializedName("feels_like")
-    val feelsLike: Double,
-
-    @SerializedName("temp_min")
-    val tempMin: Double,
-
-    @SerializedName("temp_max")
-    val tempMax: Double,
-
-    val pressure: Long,
-    val humidity: Long,
-
-    @SerializedName("sea_level")
-    val seaLevel: Long,
-
-    @SerializedName("grnd_level")
-    val grndLevel: Long
-)
-
-data class Sys (
-    val type: Long,
-    val id: Long,
-    val country: String,
-    val sunrise: Long,
-    val sunset: Long
-)
-
-
-data class Wind (
-    val speed: Double,
-    val deg: Long,
-    val gust: Double
 )
 
