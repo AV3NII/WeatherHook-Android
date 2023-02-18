@@ -243,7 +243,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
             if (response.moveToFirst()){
 
                 do {
-                    triggers.add(Weather(response.getInt(1),response.getFloat(2),response.getString(3).toBoolean()))
+                    triggers.add(Weather(response.getInt(1),response.getFloat(2),response.getInt(3) > 0))
 
                 }while (response.moveToNext())
             }
@@ -566,7 +566,7 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
     fun getLocation(): String {
         val db = readableDatabase
 
-        lateinit var name: String
+        var name = ""
         db.beginTransaction()
 
         try {
@@ -580,8 +580,9 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
 
             return name
         } catch (e: Exception) {
-            Log.e("DbHelper", "Error while trying to add Forecast to database")
+            Log.e("DbHelper", "Error while trying to get location from database")
             Log.e("DbHelper",e.message!!)
+            name = "Berlin"
         } finally {
             db.endTransaction()
         }

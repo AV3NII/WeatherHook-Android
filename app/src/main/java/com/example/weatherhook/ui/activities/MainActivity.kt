@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -51,8 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermissions(): Boolean {
         val locationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        val noticationPermission =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+        val noticationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
         return locationPermission == PackageManager.PERMISSION_GRANTED && noticationPermission == PackageManager.PERMISSION_GRANTED
     }
 
@@ -103,47 +101,44 @@ class MainActivity : AppCompatActivity() {
         val latitude = location.first
         val longitude = location.second
 
-        Log.e("shit", "new Name $locationName")
-        Log.e("shit", "new Name $location")
+
 
 
 
         if (forecastRepo.getForecast(db) == ForecastData(listOf<ForecastDay>().toMutableList())){
-            Log.e("shit", "First start fetch")
             Api().callApi(location.first,location.second,7, this) { forecast ->
                 if (forecast.cod == "200") {
                     forecastRepo.addForecast(forecast, locationName, this, SQLiteHelper(this))
                     binding = ActivityMainBinding.inflate(layoutInflater)
                     setContentView(binding.root)
-                    Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
+                    //Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
                 } else {
                     val test = forecast.city.name
                     binding = ActivityMainBinding.inflate(layoutInflater)
                     setContentView(binding.root)
-                    Log.e("shit", test.toString())
+
                 }
             }
 
         }else{
             if(locationName == apiLocationName) {
-                Log.e("shit", "data from database")
-                Log.e("shit", "Location Name: $locationName")
+
                 binding = ActivityMainBinding.inflate(layoutInflater)
                 setContentView(binding.root)
             }
             else {
-                Log.e("shit", "data from fetch")
+
                 Api().callApi(location.first, location.second,7, this) { forecast ->
                     if (forecast.cod == "200") {
                         forecastRepo.updateForecast(forecast, locationName,this, SQLiteHelper(this))
                         binding = ActivityMainBinding.inflate(layoutInflater)
                         setContentView(binding.root)
-                        Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].deg).toInt()-273.15} °C")
+                        //Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].deg).toInt()-273.15} °C")
                     } else {
                         val test = forecast.city.name
                         binding = ActivityMainBinding.inflate(layoutInflater)
                         setContentView(binding.root)
-                        Log.e("shit", test)
+
                     }
                 }
             }
@@ -178,12 +173,15 @@ class MainActivity : AppCompatActivity() {
     private fun createNotificationChannel() {
         val name = "AlertNotifier"
         val desc = "Send Alert Notifications"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelID, name, importance)
+        val importance = NotificationManager.IMPORTANCE_MIN
+        val channel = NotificationChannel(Notification(this).companion.channelID, name, importance)
         channel.description = desc
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+
+        Notification(this).scheduleNotificationManager()
+
     }
 
 }

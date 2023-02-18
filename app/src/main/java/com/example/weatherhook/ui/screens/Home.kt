@@ -2,7 +2,6 @@ package com.example.weatherhook.ui.screens
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.ForecastData
+import com.example.weatherhook.data.models.ForecastDay
 import com.example.weatherhook.data.models.WeatherHookEventList
 import com.example.weatherhook.data.repository.EventRepo
 import com.example.weatherhook.data.repository.ForecastRepo
@@ -42,7 +42,6 @@ class Home : Fragment() {
         data = repo.getAllEvents(db)
 
         forecast = forecastRepo.getForecast(db)
-        Log.e("shit", "Home shit ${forecast.toString()}")
         arguments?.let {
         }
     }
@@ -65,7 +64,8 @@ class Home : Fragment() {
 
         composeView.setContent {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
-                LocationWeather(context = requireContext(),forecast.data[0])
+                if(forecast.data != listOf<ForecastDay>().toMutableList())LocationWeather(context = requireContext(),forecast.data[0])
+
                 WeatherForecast(forecast)
                 if (data.events.size > 0) WeatherEventList(data, context = requireContext(),db)
 
