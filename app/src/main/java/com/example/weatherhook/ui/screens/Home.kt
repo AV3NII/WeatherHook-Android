@@ -66,9 +66,10 @@ class Home : Fragment() {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
                 if(forecast.data != listOf<ForecastDay>().toMutableList()) {
                     LocationWeather(context = requireContext(),forecast.data[0])
+                    WeatherForecast(forecast)
                 }
 
-                WeatherForecast(forecast)
+
                 if (data.events.size > 0) WeatherEventList(data, context = requireContext(),db)
 
             }

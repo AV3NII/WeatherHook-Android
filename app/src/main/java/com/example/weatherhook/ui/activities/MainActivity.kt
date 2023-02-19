@@ -1,12 +1,16 @@
 package com.example.weatherhook.ui.activities
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +27,7 @@ import com.example.weatherhook.databinding.ActivityMainBinding
 import com.example.weatherhook.services.locationService.LocationService
 import com.example.weatherhook.services.notificationService.Notification
 import java.util.*
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -94,7 +99,24 @@ class MainActivity : AppCompatActivity() {
         val apiLocationName = forecastRepo.getName(db)
 
 
+        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 
+        val activeNetwork = cm.activeNetworkInfo
+        val isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting
+
+        if (!isConnected) {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder.setTitle("No internet connection")
+            builder.setMessage("Please turn on your internet connection and restart the app")
+            builder.setPositiveButton(
+                "OK",
+                DialogInterface.OnClickListener { dialog, id -> // Open the settings to allow the user to turn on the internet
+                    val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
+                    startActivity(intent)
+                })
+            builder.show()
+        }
 
 
         GeoApi().callApi(location.first, location.second, this) { locationNameApi ->
