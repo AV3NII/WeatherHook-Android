@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val PERMISSIONS_REQUEST_CODE = 123
 
-    val forecastRepo = ForecastRepo()
+    private val forecastRepo = ForecastRepo()
     val db = SQLiteHelper(this)
 
 
@@ -41,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (checkPermissions()) {
-
                 recreate()
             } else {
             }
@@ -98,8 +98,6 @@ class MainActivity : AppCompatActivity() {
         val locationName = LocationService().getLocationName(this, location.first.toDouble(), location.second.toDouble()) ?: "Berlin"
         val apiLocationName = forecastRepo.getName(db)
 
-        val latitude = location.first
-        val longitude = location.second
 
 
 
@@ -114,6 +112,7 @@ class MainActivity : AppCompatActivity() {
 
                 } else {
                     val test = forecast.city.name
+                    Log.e("error", test)
                     binding = ActivityMainBinding.inflate(layoutInflater)
                     setContentView(binding.root)
 
@@ -133,9 +132,9 @@ class MainActivity : AppCompatActivity() {
                         forecastRepo.updateForecast(forecast, locationName,this, SQLiteHelper(this))
                         binding = ActivityMainBinding.inflate(layoutInflater)
                         setContentView(binding.root)
-                        //Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].deg).toInt()-273.15} °C")
                     } else {
                         val test = forecast.city.name
+                        Log.e("error", test)
                         binding = ActivityMainBinding.inflate(layoutInflater)
                         setContentView(binding.root)
 
@@ -173,7 +172,7 @@ class MainActivity : AppCompatActivity() {
     private fun createNotificationChannel() {
         val name = "AlertNotifier"
         val desc = "Send Alert Notifications"
-        val importance = NotificationManager.IMPORTANCE_MIN
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(Notification(this).companion.channelID, name, importance)
         channel.description = desc
 

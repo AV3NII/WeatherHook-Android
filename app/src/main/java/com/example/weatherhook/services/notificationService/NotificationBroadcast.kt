@@ -29,7 +29,7 @@ class NotificationBroadcast() : BroadcastReceiver() {
                     repo.addForecast(forecast, locationName, context, SQLiteHelper(context))
                 } else {
                     val test = forecast.city.name
-                    Log.e("shit", test.toString())
+                    Log.e("error", test.toString())
                 }
             }
         }else{
@@ -39,7 +39,7 @@ class NotificationBroadcast() : BroadcastReceiver() {
                     repo.updateForecast(forecast, locationName, context, SQLiteHelper(context))
                 } else {
                     val test = forecast.city.name
-                    Log.e("shit", test.toString())
+                    Log.e("error", test.toString())
                 }
             }
         }

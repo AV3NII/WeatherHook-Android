@@ -222,7 +222,7 @@ class EventChecker(db: SQLiteHelper, context: Context) {
 
                     } else {
 
-                        Log.e("shit", forecast.city.name + " ocurred when trying to get data for certain event position")
+                        Log.e("error", forecast.city.name + " ocurred when trying to get data for certain event position")
                     }
                 }
 
