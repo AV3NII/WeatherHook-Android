@@ -1,27 +1,27 @@
 package com.example.weatherhook.ui.activities
 
 import android.Manifest
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.weatherhook.R
 import com.example.weatherhook.data.api.Api
+import com.example.weatherhook.data.api.GeoApi
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.ForecastData
 import com.example.weatherhook.data.models.ForecastDay
 import com.example.weatherhook.data.repository.ForecastRepo
 import com.example.weatherhook.databinding.ActivityMainBinding
 import com.example.weatherhook.services.locationService.LocationService
-import com.example.weatherhook.services.notificationService.*
 import com.example.weatherhook.services.notificationService.Notification
-import com.google.android.gms.location.*
 import java.util.*
 
 
@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (checkPermissions()) {
                 recreate()
-            } else {
             }
         }
     }
@@ -62,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val language: String? = sharedPreferences.getString("language", "en")
-        val locale = Locale(language)
+        val locale = Locale(language!!)
         Locale.setDefault(locale)
         val config = resources.configuration
         config.setLocale(locale)
@@ -84,14 +83,14 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        //setContentView(R.layout.activity_main)
+
         val action=supportActionBar
         action!!.title = getString(R.string.app_name)
 
         createNotificationChannel()
 
         val location = LocationService().getLocationPair(this)
-        var locationName: String = "Error"
+        var locationName = "Error"
         val apiLocationName = forecastRepo.getName(db)
 
 
@@ -113,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                         setContentView(binding.root)
                     } else {
                         val test = forecast.city.name
-                        Log.e("error", test.toString())
+                        Log.e("error", test)
                         binding = ActivityMainBinding.inflate(layoutInflater)
                         setContentView(binding.root)
                     }
@@ -132,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                             setContentView(binding.root)
                         } else {
                             val test = forecast.city.name
-                            Log.e("error", test.toString())
+                            Log.e("error", test)
                             binding = ActivityMainBinding.inflate(layoutInflater)
                             setContentView(binding.root)
                         }

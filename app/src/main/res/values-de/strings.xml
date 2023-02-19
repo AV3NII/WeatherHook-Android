@@ -32,5 +32,8 @@
     <string name="save">Speichern</string>
     <string name="delete">Löschen</string>
     <!-- New Hook View end                              -->
+    <!-- Notification                                   -->
+    <string name="notificationTitle">Ausgelöste Hook:</string>
+    <!-- Notification end                               -->
 
 </resources>

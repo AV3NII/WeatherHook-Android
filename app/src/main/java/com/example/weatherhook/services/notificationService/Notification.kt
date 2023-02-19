@@ -44,9 +44,9 @@ class Notification(private val context: Context) {
         )
 
         //Schedules our EventChecker
-        //interval:        AlarmManager.INTERVAL_DAY
 
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 60000, pendingIntent)
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, AlarmManager.INTERVAL_DAY, pendingIntent)
 
 
     }

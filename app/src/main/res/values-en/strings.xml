@@ -36,4 +36,7 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <!-- New Hook View end                              -->
+    <!-- Notification                                   -->
+    <string name="notificationTitle">Triggered Hook:</string>
+    <!-- Notification end                               -->
 </resources>
