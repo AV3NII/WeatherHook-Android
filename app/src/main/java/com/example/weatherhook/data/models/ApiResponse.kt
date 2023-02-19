@@ -75,3 +75,84 @@ data class ApiWeather (
     val icon: String
 )
 
+
+
+
+
+
+
+
+// GEO LOCATION GOOGLE
+
+
+data class GeoDataApi (
+    @SerializedName("plus_code")
+    val plusCode: PlusCode,
+
+    val results: List<Result>,
+    val status: String
+) {
+
+    fun fromJson(json: String): GeoDataApi {
+        return Gson().fromJson(json, GeoDataApi::class.java)
+    }
+}
+
+data class PlusCode (
+    @SerializedName("compound_code")
+    val compoundCode: String,
+
+    @SerializedName("global_code")
+    val globalCode: String
+)
+
+data class Result (
+    @SerializedName("address_components")
+    val addressComponents: List<AddressComponent>,
+
+    @SerializedName("formatted_address")
+    val formattedAddress: String,
+
+    val geometry: Geometry,
+
+    @SerializedName("place_id")
+    val placeID: String,
+
+    @SerializedName("plus_code")
+    val plusCode: PlusCode? = null,
+
+    val types: List<String>,
+
+    @SerializedName("postcode_localities")
+    val postcodeLocalities: List<String>? = null
+)
+
+data class AddressComponent (
+    @SerializedName("long_name")
+    val longName: String,
+
+    @SerializedName("short_name")
+    val shortName: String,
+
+    val types: List<String>
+)
+
+data class Geometry (
+    val location: Location,
+
+    @SerializedName("location_type")
+    val locationType: String,
+
+    val viewport: Bounds,
+    val bounds: Bounds? = null
+)
+
+data class Bounds (
+    val northeast: Location,
+    val southwest: Location
+)
+
+data class Location (
+    val lat: Double,
+    val lng: Double
+)

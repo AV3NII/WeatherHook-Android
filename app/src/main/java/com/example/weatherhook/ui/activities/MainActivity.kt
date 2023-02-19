@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                     forecastRepo.addForecast(forecast, locationName, this, SQLiteHelper(this))
                     binding = ActivityMainBinding.inflate(layoutInflater)
                     setContentView(binding.root)
-                    //Notification(this).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C")
+
                 } else {
                     val test = forecast.city.name
                     binding = ActivityMainBinding.inflate(layoutInflater)
