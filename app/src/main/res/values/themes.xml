@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.WeatherHook" parent="Theme.MaterialComponents">
+    <style name="Theme.WeatherHook" parent="Theme.MaterialComponents.DayNight.Bridge">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/mid_green</item>
+        <item name="colorPrimary">@color/dark_green</item>
         <item name="colorPrimaryVariant">@color/dark_green</item>
         <item name="colorOnPrimary">@color/screen_background</item>
         <item name="colorSecondary">@color/signal_red</item>
@@ -10,4 +10,10 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="Theme.WeatherHook.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.WeatherHook.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.WeatherHook.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

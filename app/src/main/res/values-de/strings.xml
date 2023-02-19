@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Week fragment                                  -->
+    <string name="MO">MO</string>
+    <string name="TU">DI</string>
+    <string name="WE">MI</string>
+    <string name="TH">DO</string>
+    <string name="FR">FR</string>
+    <string name="SA">SA</string>
+    <string name="SU">SO</string>
+    <!-- App name                                       -->
+    <string name="app_name">Weather Hook</string>
+    <!-- App name end                                   -->
+    <!-- Map View                                       -->
+    <string name="title_activity_maps">Karte</string>
+    <!-- Map View end                                   -->
+    <!-- Settings View                                  -->
+    <string name="settings">Einstellungen</string>
+    <string name="language">Sprache</string>
+    <string name="language_en">Englisch</string>
+    <string name="language_de">Deutsch</string>
+    <string name="notifications">Mitteilungen</string>
+    <string name="openNotifications">Mitteilungseinstellungen</string>
+    <string name="saveSettings">Speicher Einstellungen</string>
+    <!-- Settings View end                              -->
+    <!-- New Hook View                                  -->
+    <string name="newHook">Neue Hook</string>
+    <string name="timeToEvent">Tage zum Event</string>
+    <string name="days">Tag(e)</string>
+    <string name="daysOfInterest">Interessante Tage in der Woche</string>
+    <string name="save">Speichern</string>
+    <string name="delete">Löschen</string>
+    <!-- New Hook View end                              -->
+    <!-- Notification                                   -->
+    <string name="notificationTitle">Ausgelöste Hook:</string>
+    <!-- Notification end                               -->
+
+</resources>
