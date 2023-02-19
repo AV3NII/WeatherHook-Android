@@ -36,12 +36,12 @@ fun WeatherHook(event: WeatherHookEvent,context: Context,db:SQLiteHelper) {
 
     var icon:Painter = painterResource(id = R.drawable.ic_baseline_anchor_24)
     when(event.triggers[0].weatherPhenomenon){
-        0 -> {icon = painterResource(R.drawable.ic_baseline_settings_24)}
-        1 -> {icon = painterResource(R.drawable.ic_baseline_anchor_24)}
-        2 -> {icon = painterResource(R.drawable.ic_baseline_settings_24)}
-        3 -> {icon = painterResource(R.drawable.ic_baseline_settings_24)}
-        4 -> {icon = painterResource(R.drawable.ic_baseline_map_24)}
-        5 -> {icon = painterResource(R.drawable.ic_baseline_settings_24)}
+        0 -> {icon = painterResource(R.drawable.baseline_wb_sunny_24)}
+        1 -> {icon = painterResource(R.drawable.baseline_cloud_24)}
+        2 -> {icon = painterResource(R.drawable.baseline_grain_24)}
+        3 -> {icon = painterResource(R.drawable.baseline_snowboarding_24)}
+        4 -> {icon = painterResource(R.drawable.baseline_wind_power_24)}
+        5 -> {icon = painterResource(R.drawable.baseline_whatshot_24)}
     }
 
 
