@@ -68,7 +68,7 @@ fun WeatherHook(event: WeatherHookEvent,context: Context,db:SQLiteHelper) {
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        modifier = Modifier.scale(3f),
+                        modifier = Modifier.scale(2.5f),
                         painter = icon,
                         contentDescription = "Add Event",
                         tint = colorResource(R.color.light_green)
