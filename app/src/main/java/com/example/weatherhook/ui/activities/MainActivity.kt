@@ -1,28 +1,27 @@
 package com.example.weatherhook.ui.activities
 
 import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.weatherhook.R
 import com.example.weatherhook.data.api.Api
-import com.example.weatherhook.data.api.GeoApi
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.ForecastData
 import com.example.weatherhook.data.models.ForecastDay
 import com.example.weatherhook.data.repository.ForecastRepo
 import com.example.weatherhook.databinding.ActivityMainBinding
 import com.example.weatherhook.services.locationService.LocationService
+import com.example.weatherhook.services.notificationService.*
 import com.example.weatherhook.services.notificationService.Notification
-import com.example.weatherhook.services.notificationService.Notification.Companion.channelID
+import com.google.android.gms.location.*
 import java.util.*
 
 
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val PERMISSIONS_REQUEST_CODE = 123
 
-    val forecastRepo = ForecastRepo()
+    private val forecastRepo = ForecastRepo()
     val db = SQLiteHelper(this)
 
 
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (checkPermissions()) {
-
                 recreate()
             } else {
             }
@@ -174,12 +172,14 @@ class MainActivity : AppCompatActivity() {
         val name = "AlertNotifier"
         val desc = "Send Alert Notifications"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelID, name, importance)
+        val channel = NotificationChannel(Notification(this).companion.channelID, name, importance)
         channel.description = desc
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+
         Notification(this).scheduleNotificationManager()
+
     }
 
 }

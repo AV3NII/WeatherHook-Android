@@ -64,7 +64,9 @@ class Home : Fragment() {
 
         composeView.setContent {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()))  {
-                if(forecast.data != listOf<ForecastDay>().toMutableList())LocationWeather(context = requireContext(),forecast.data[0])
+                if(forecast.data != listOf<ForecastDay>().toMutableList()) {
+                    LocationWeather(context = requireContext(),forecast.data[0])
+                }
 
                 WeatherForecast(forecast)
                 if (data.events.size > 0) WeatherEventList(data, context = requireContext(),db)
