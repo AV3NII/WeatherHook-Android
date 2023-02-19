@@ -29,7 +29,7 @@ class BootReceiver : BroadcastReceiver() {
 
                     } else {
                         val test = forecast.city.name
-                        Log.e("shit", test.toString())
+                        Log.e("error", test.toString())
                     }
                 }
             }else{
@@ -40,7 +40,7 @@ class BootReceiver : BroadcastReceiver() {
                         //Notification(context).scheduleNotification(forecast.city.name, "It is ${(forecast.list[0].temp.max).toInt()-273.15} °C",1)
                     } else {
                         val test = forecast.city.name
-                        Log.e("shit", test.toString())
+                        Log.e("error", test.toString())
                     }
                 }
             }

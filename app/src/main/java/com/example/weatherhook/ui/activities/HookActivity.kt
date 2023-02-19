@@ -35,7 +35,7 @@ class HookActivity : AppCompatActivity() {
 
         val action=supportActionBar
         if (eventId == -2){
-            action!!.title = "New Hook"
+            action!!.title = getString(R.string.newHook)
         }else action!!.title = data.title
 
     }

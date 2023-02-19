@@ -514,6 +514,13 @@ class SQLiteHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME,nu
                     "Friday" -> "FR"
                     "Saturday" -> "SA"
                     "Sunday" -> "SU"
+                    "Montag" -> "MO"
+                    "Dienstag" -> "TU"
+                    "Mittwoch" -> "WE"
+                    "Donnerstag" -> "TH"
+                    "Freitag" -> "FR"
+                    "Samstag" -> "SA"
+                    "Sonntag" -> "SU"
                     else -> ""
                 }
 

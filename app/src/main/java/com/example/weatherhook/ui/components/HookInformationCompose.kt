@@ -2,7 +2,6 @@ package com.example.weatherhook.ui.components
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -18,6 +17,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -73,7 +73,7 @@ fun TimeToEvent(daysToEvent: Int):Int {
         backgroundColor = colorResource(id = R.color.component_background)
     ) {
         Column(verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(10.dp)) {
-            Text("Time to Event in days", fontWeight = FontWeight.Bold, fontSize = 20.sp, color = colorResource(
+            Text(stringResource(R.string.timeToEvent), fontWeight = FontWeight.Bold, fontSize = 20.sp, color = colorResource(
                 id = R.color.black_green
             ))
             Spacer(modifier = Modifier.height(15.dp))
@@ -139,12 +139,11 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
                 }, modifier = Modifier.width(150.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(R.color.signal_red))
             ) {
-                Text(text = "Delete", color = colorResource(R.color.white), fontSize = 15.sp)
+                Text(text = stringResource(R.string.delete), color = colorResource(R.color.white), fontSize = 15.sp)
             }
 
             Button(
                 onClick = {
-                    Log.e("SaveButton", weatherHookEvent.toString())
                     when (weatherHookEvent.eventId) {
                         -2 -> {
                             EventRepo()
@@ -172,7 +171,7 @@ fun SaveAndDelete(weatherHookEvent: WeatherHookEvent, context: Context, db: SQLi
                 }, modifier = Modifier.width(150.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(R.color.dark_green))
             ) {
-                Text(text = "Save", color = colorResource(R.color.white), fontSize = 15.sp)
+                Text(text = stringResource(R.string.save), color = colorResource(R.color.white), fontSize = 15.sp)
             }
         }
     }

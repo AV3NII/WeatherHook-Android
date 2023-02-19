@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -78,10 +79,10 @@ fun WeatherHook(event: WeatherHookEvent,context: Context,db:SQLiteHelper) {
                 Text(text = event.title, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 10.dp, bottom = 5.dp, top = 10.dp),color = colorResource(
                     id = R.color.black_green
                 ))
-                Text(text = "Time to event: ${event.timeToEvent} Day(s)", modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),color = colorResource(
+                Text(text = "${stringResource(R.string.timeToEvent)}: ${event.timeToEvent} ${stringResource(R.string.days)}", modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),color = colorResource(
                     id = R.color.mid_green
-                ))
-                Weekdays(event.relevantDays.split(";"), 20, false)
+                ), fontSize = 14.sp)
+                Weekdays(event.relevantDays.split(";"), 19, false)
             }
             Column(modifier = Modifier.padding(end = 20.dp)) {
                 Switch(modifier = Modifier
