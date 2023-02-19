@@ -1,28 +1,27 @@
 package com.example.weatherhook.ui.activities
 
 import android.Manifest
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.weatherhook.R
 import com.example.weatherhook.data.api.Api
+import com.example.weatherhook.data.api.GeoApi
 import com.example.weatherhook.data.db.SQLiteHelper
 import com.example.weatherhook.data.models.ForecastData
 import com.example.weatherhook.data.models.ForecastDay
 import com.example.weatherhook.data.repository.ForecastRepo
 import com.example.weatherhook.databinding.ActivityMainBinding
 import com.example.weatherhook.services.locationService.LocationService
-import com.example.weatherhook.services.notificationService.*
 import com.example.weatherhook.services.notificationService.Notification
-import com.google.android.gms.location.*
 import java.util.*
 
 
@@ -43,15 +42,15 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (checkPermissions()) {
                 recreate()
-            } else {
             }
         }
     }
 
     private fun checkPermissions(): Boolean {
         val locationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        val noticationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-        return locationPermission == PackageManager.PERMISSION_GRANTED && noticationPermission == PackageManager.PERMISSION_GRANTED
+        val notificationPermission =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+        return locationPermission == PackageManager.PERMISSION_GRANTED && notificationPermission == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,16 +60,12 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
 
 
-        // Get the editor for the shared preferences file
-        val editor = sharedPreferences.edit()
-
-
-        // Set a boolean value in the shared preferences file
-        editor.putBoolean("key", true)
-
-
-        // Save the changes to the shared preferences file
-        editor.apply()
+        val language: String? = sharedPreferences.getString("language", "en")
+        val locale = Locale(language!!)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
 
 
         if (!checkPermissions()) {
@@ -88,48 +83,31 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        //setContentView(R.layout.activity_main)
-        val action=supportActionBar
-        action!!.title = "Weather Hook Home"
 
-        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O) { createNotificationChannel() }
+        val action=supportActionBar
+        action!!.title = getString(R.string.app_name)
+
+        createNotificationChannel()
 
         val location = LocationService().getLocationPair(this)
-        val locationName = LocationService().getLocationName(this, location.first.toDouble(), location.second.toDouble()) ?: "Berlin"
+        var locationName = "Error"
         val apiLocationName = forecastRepo.getName(db)
 
 
 
 
 
-
-        if (forecastRepo.getForecast(db) == ForecastData(listOf<ForecastDay>().toMutableList())){
-            Api().callApi(location.first,location.second,7, this) { forecast ->
-                if (forecast.cod == "200") {
-                    forecastRepo.addForecast(forecast, locationName, this, SQLiteHelper(this))
-                    binding = ActivityMainBinding.inflate(layoutInflater)
-                    setContentView(binding.root)
-
+        GeoApi().callApi(location.first, location.second, this) { locationNameApi ->
+            if (locationNameApi.status == "OK") {
+                locationName = locationNameApi.results[0].addressComponents[2].longName
                 } else {
-                    val test = forecast.city.name
-                    Log.e("error", test)
-                    binding = ActivityMainBinding.inflate(layoutInflater)
-                    setContentView(binding.root)
-
-                }
+                locationName = "Berlin"
             }
-
-        }else{
-            if(locationName == apiLocationName) {
-
-                binding = ActivityMainBinding.inflate(layoutInflater)
-                setContentView(binding.root)
-            }
-            else {
-
-                Api().callApi(location.first, location.second,7, this) { forecast ->
+            // END GeoApi Call -> received Data -> Start of API Call
+            if (forecastRepo.getForecast(db) == ForecastData(listOf<ForecastDay>().toMutableList())){
+                Api().callApi(location.first,location.second,7, this) { forecast ->
                     if (forecast.cod == "200") {
-                        forecastRepo.updateForecast(forecast, locationName,this, SQLiteHelper(this))
+                        forecastRepo.addForecast(forecast, locationName, this, SQLiteHelper(this))
                         binding = ActivityMainBinding.inflate(layoutInflater)
                         setContentView(binding.root)
                     } else {
@@ -137,15 +115,36 @@ class MainActivity : AppCompatActivity() {
                         Log.e("error", test)
                         binding = ActivityMainBinding.inflate(layoutInflater)
                         setContentView(binding.root)
-
                     }
                 }
-            }
 
+            }else{
+                if(locationName == apiLocationName) {
+                    binding = ActivityMainBinding.inflate(layoutInflater)
+                    setContentView(binding.root)
+                }
+                else {
+                    Api().callApi(location.first, location.second,7, this) { forecast ->
+                        if (forecast.cod == "200") {
+                            forecastRepo.updateForecast(forecast, locationName,this, SQLiteHelper(this))
+                            binding = ActivityMainBinding.inflate(layoutInflater)
+                            setContentView(binding.root)
+                        } else {
+                            val test = forecast.city.name
+                            Log.e("error", test)
+                            binding = ActivityMainBinding.inflate(layoutInflater)
+                            setContentView(binding.root)
+                        }
+                    }
+                }
+
+            }
         }
 
 
+
     }
+
 
 
     fun openMap(view: View) {
@@ -168,7 +167,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
         val name = "AlertNotifier"
         val desc = "Send Alert Notifications"

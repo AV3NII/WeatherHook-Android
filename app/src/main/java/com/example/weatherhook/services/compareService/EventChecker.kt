@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.SystemClock
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -42,7 +41,7 @@ class EventChecker(db: SQLiteHelper, context: Context) {
         }
     }
 
-    fun makeNotification(intent: Intent){
+    fun makeNotification(){
 
 
         allEvents.events.forEachIndexed{ index, event ->
@@ -193,19 +192,19 @@ class EventChecker(db: SQLiteHelper, context: Context) {
                             }
 
                             if (!triggeredTriggers.contains(false)) {
-                                var message = event.title
+                                val message = event.title
 
                                 val launchAppIntent = Intent(_context, MainActivity::class.java)
                                 val launchPendingIntent = PendingIntent.getActivity(
                                     _context,
                                     1,
                                     launchAppIntent,
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+                                    PendingIntent.FLAG_IMMUTABLE
                                 )
 
                                 val notification = NotificationCompat.Builder(_context, channelID)
                                     .setSmallIcon(R.drawable.ic_baseline_anchor_24)
-                                    .setContentTitle("Triggered Hook:")
+                                    .setContentTitle(_context.resources.getString(R.string.notificationTitle))
                                     .setContentText(message)
                                     .setContentIntent(launchPendingIntent)
                                     .build()

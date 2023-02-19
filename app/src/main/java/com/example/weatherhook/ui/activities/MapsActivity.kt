@@ -34,6 +34,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val db = SQLiteHelper(this)
         data = repo.getAllEvents(db)
 
+        val action=supportActionBar
+        action!!.title = getString(R.string.title_activity_maps)
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -50,6 +53,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         data.events.forEach { event ->
             mMap.addMarker(
+
                 MarkerOptions()
                     .position(
                         LatLng(
@@ -61,6 +65,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         event.title
                     )
             )
+
         }
 
         val cameraPosition = CameraPosition.Builder()
@@ -70,5 +75,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .build()
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
+
     }
+
 }

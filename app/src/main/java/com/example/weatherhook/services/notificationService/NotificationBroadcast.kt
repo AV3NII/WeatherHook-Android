@@ -29,7 +29,7 @@ class NotificationBroadcast() : BroadcastReceiver() {
                     repo.addForecast(forecast, locationName, context, SQLiteHelper(context))
                 } else {
                     val test = forecast.city.name
-                    Log.e("error", test.toString())
+                    Log.e("error", test)
                 }
             }
         }else{
@@ -39,14 +39,14 @@ class NotificationBroadcast() : BroadcastReceiver() {
                     repo.updateForecast(forecast, locationName, context, SQLiteHelper(context))
                 } else {
                     val test = forecast.city.name
-                    Log.e("error", test.toString())
+                    Log.e("error", test)
                 }
             }
         }
 
         //checks if hooks and forcast align -> send notification
 
-        EventChecker(db,context).makeNotification(intent)
+        EventChecker(db,context).makeNotification()
 
 
     }

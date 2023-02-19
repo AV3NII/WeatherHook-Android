@@ -1,5 +1,6 @@
 package com.example.weatherhook.ui.screens
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -7,7 +8,6 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.*
@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +30,10 @@ import com.example.weatherhook.data.repository.EventRepo
 import com.example.weatherhook.ui.activities.MainActivity
 
 
-class Settings : Fragment() {
+
+class Settings() : Fragment() {
+
+
 
     private lateinit var composeView: ComposeView
 
@@ -42,7 +46,6 @@ class Settings : Fragment() {
         db = SQLiteHelper(requireContext())
         data = repo.getAllEvents(db)
         arguments?.let {
-
         }
     }
 
@@ -58,20 +61,33 @@ class Settings : Fragment() {
 
 
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
 
 
         super.onViewCreated(view, savedInstanceState)
         composeView.setContent {
 
-            val radioOptions = listOf("English", "German")
-            val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1] ) }
+            val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            val selectedLanguage = sharedPreferences.getString("language", "en")
+            var select = 0
+
+            select = if(selectedLanguage == "de") {
+                1
+            } else {
+                0
+            }
+
+
+            val radioOptions = listOf(stringResource(R.string.language_en), stringResource(R.string.language_de))
+            val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[select] ) }
+
 
             Surface() {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(start = 50.dp, end = 50.dp)) {
                     Spacer(modifier = Modifier.height(30.dp))
-                    Text(text = "Language", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.language), fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(20.dp))
                     radioOptions.forEach { text ->
                         Row(
@@ -87,7 +103,9 @@ class Settings : Fragment() {
                         ) {
                             RadioButton(
                                 selected = (text == selectedOption),
-                                onClick = { onOptionSelected(text) },
+                                onClick = {
+                                    onOptionSelected(text)
+                                          },
                                 colors = RadioButtonDefaults.colors(selectedColor = colorResource(id = R.color.dark_green), unselectedColor = colorResource(
                                     id = R.color.light_green)
                                 )
@@ -99,28 +117,43 @@ class Settings : Fragment() {
                         }
                     }
                     Spacer(modifier = Modifier.height(40.dp))
-                    Text(text = "Notifications", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.notifications), fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(onClick = {
-                        //TODO: What if lower than Tiramisu (API 33)
-                        val i = Intent(Settings.ACTION_ALL_APPS_NOTIFICATION_SETTINGS)
-                        context?.startActivity(i)
+                        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            Intent(Settings.ACTION_ALL_APPS_NOTIFICATION_SETTINGS)
+                        } else {
+                            Intent(Settings.ACTION_SETTINGS)
+                        }
+                        startActivity(intent)
+
                     }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(
                         R.color.dark_green)
                     )
                     ) {
-                        Text(text = "Open Notification Settings", color = Color.White)
+                        Text(text = stringResource(R.string.openNotifications), color = Color.White)
                     }
 
                     Spacer(modifier = Modifier.height(40.dp))
                     Button(onClick = {
+                        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        val languageSelected = when (selectedOption) {
+                            "German" ->  "de"
+                            "Deutsch" ->  "de"
+                            "English" ->  "en"
+                            "Englisch" ->  "en"
+                            else ->  "en"
+                        }
+                        editor.putString("language", languageSelected) // set the locale string to the selected option
+                        editor.apply()
                         val intent = Intent(requireContext(), MainActivity::class.java)
                         requireContext().startActivity(intent)
                     }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(
                         R.color.mid_green)
                     )
                     ) {
-                        Text(text = "Save Settings", fontWeight = FontWeight.Bold, color = colorResource(id = R.color.black_black))
+                        Text(text = stringResource(R.string.saveSettings), fontWeight = FontWeight.Bold, color = colorResource(id = R.color.black_black))
                     }
                 }
             }

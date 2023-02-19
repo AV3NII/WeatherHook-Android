@@ -15,11 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherhook.R
+
+
 
 
 @Composable
@@ -33,8 +36,10 @@ fun WeekDaysWidget(daysList: List<String>):String{
         border = BorderStroke(1.5.dp, colorResource(id = R.color.black_green)),
         backgroundColor = colorResource(id = R.color.component_background)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(10.dp)) {
-            Text(text = "Days of interest in the Week", color = colorResource(R.color.black_green), fontSize = 20.sp, fontWeight = FontWeight.Bold)
-             weekdays.value = Weekdays(daysList = daysList, size = 35, true)
+            Text(
+                stringResource(R.string.daysOfInterest)
+                , color = colorResource(R.color.black_green), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+             weekdays.value = Weekdays(daysList = daysList, size = 33, true)
 
 
         }
@@ -50,7 +55,7 @@ fun WeekDaysWidget(daysList: List<String>):String{
 @Composable
 fun Weekdays(daysList: List<String>, size: Int, clickable: Boolean):List<String> {
     val _daysList = remember { mutableStateOf(daysList) }
-    val week = listOf("MO","TU","WE","TH","FR","SA","SU")
+    val week = listOf(stringResource(R.string.MO),stringResource(R.string.TU),stringResource(R.string.WE),stringResource(R.string.TH),stringResource(R.string.FR),stringResource(R.string.SA),stringResource(R.string.SU))
 
     val background = colorResource(id = R.color.light_green_bg)
     val backgroundActivated = colorResource(id = R.color.dark_green)

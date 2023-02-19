@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,10 @@ fun WeatherForecast(forecastData: ForecastData) {
 
     val days = arrayOf(
         "MO", "TU", "WE", "TH", "FR", "SA", "SU"
+    )
+
+    val weekDays = arrayOf(
+        R.string.MO, R.string.TU, R.string.WE, R.string.TH, R.string.FR, R.string.SA, R.string.SU
     )
 
     val calendar = Calendar.getInstance()
@@ -59,20 +64,22 @@ fun WeatherForecast(forecastData: ForecastData) {
                                 else colorResource(id = R.color.dark_green),
                                 RoundedCornerShape(5.dp)
                             )
+
                     )
                      {
-                        Box(modifier = Modifier
+                        Box(contentAlignment = Alignment.Center, modifier = Modifier
                             .background(
                                 if (currentDayFormatted == index + 1) colorResource(id = R.color.mid_green)
                                 else colorResource(
                                     id = R.color.dark_green
                                 ), RoundedCornerShape(5.dp)
                             )
+                            .width(33.dp)
                             .padding(top = 2.dp, bottom = 2.dp, start = 5.dp, end = 5.dp)) {
                             if (currentDayFormatted == index + 1){
-                                Text(text = day, textAlign = TextAlign.Center,fontWeight = FontWeight.Bold, color = colorResource(id = R.color.black_black))
+                                Text(text = stringResource(weekDays[index]), textAlign = TextAlign.Center,fontWeight = FontWeight.Bold, color = colorResource(id = R.color.black_black))
                             }else{
-                                Text(text = day, textAlign = TextAlign.Center,fontWeight = FontWeight.Normal, color = colorResource(id = R.color.light_green))
+                                Text(text = stringResource(weekDays[index]), textAlign = TextAlign.Center,fontWeight = FontWeight.Normal, color = colorResource(id = R.color.light_green))
                             }
 
                         }
