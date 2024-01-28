@@ -1,3 +1,6 @@
+
+![3bc2eef9-936c-4396-82d1-dc318bb600da](https://github.com/AV3NII/WeatherHook_Android/assets/106849147/0fcc0f4b-44c4-4e98-b41d-884ab599538f)
+
 # Weather Hook
 ### Weather Hook is a native Android App which allows the user to set alerts for different Events. <br>
 #### Those Alerts will be triggered by up to three weather conditions such as "Sun", "Cloud in percentage", "Rain in stages", "Snow in stages", "Wind in Bfd", "Temperature in °C" <br>
